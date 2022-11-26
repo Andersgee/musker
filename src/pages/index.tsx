@@ -10,6 +10,7 @@ const Page: NextPage = () => {
 
   return (
     <div>
+      <div>hello world</div>
       <div>29: {hashidFromNumber(29)}</div>
       <div className="bg-green-500">h ello</div>
       <Link className="block" href="/ad">

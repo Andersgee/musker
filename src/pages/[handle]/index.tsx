@@ -15,7 +15,11 @@ const Page: NextPage<Props> = ({ user }) => {
     return <div></div>;
   }
 
-  return <div>user: {JSON.stringify(user)}</div>;
+  return (
+    <div>
+      <div>user: {JSON.stringify(user)}</div>
+    </div>
+  );
 };
 
 export default Page;
