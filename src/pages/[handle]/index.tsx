@@ -46,7 +46,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
       { params: { handle: "berkor" } }, //nonexisting but generate anyway?
       { params: { handle: "mamma" } }, //nonexisting but generate anyway?
     ],
-    fallback: false, // can also be true or 'blocking'
+    fallback: true,
   };
 };
 

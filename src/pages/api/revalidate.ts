@@ -1,10 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { env } from "src/env/server.mjs";
 
-/**
- * example path "/blog/post-1"
- *
- */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { key, path } = req.query;
   if (typeof key !== "string" || key !== env.FETCH_KEY) {

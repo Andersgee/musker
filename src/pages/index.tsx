@@ -1,16 +1,18 @@
 import { type NextPage } from "next";
 import Link from "next/link";
 import { hashidFromNumber } from "src/utils/hashids";
+import { trpc } from "src/utils/trpc";
 //import Head from "next/head";
 
-//import { trpc } from "../utils/trpc";
-
 const Page: NextPage = () => {
-  //const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
+  const { mutateAsync, isLoading } = trpc.handle.debugcreate.useMutation();
 
   return (
     <div>
       <div>hello world</div>
+      <button disabled={isLoading} onClick={() => mutateAsync({ path: "/deserunt" })}>
+        CLICK HERE TO REVALiDATE /deserunt
+      </button>
       <div>29: {hashidFromNumber(29)}</div>
       <div className="bg-green-500">h ello</div>
       <Link className="block" href="/ad">
