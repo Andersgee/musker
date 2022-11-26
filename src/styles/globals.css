@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply border-neutral-300  bg-neutral-50 text-neutral-800 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-sans text-lg font-medium text-black dark:text-white;
+  }
+
+  h1,
+  h2 {
+    letter-spacing: -0.03em;
+  }
+  /*
+  a {
+    @apply font-sans text-neutral-600 underline decoration-dotted  hover:text-neutral-500 hover:decoration-solid dark:text-neutral-300 dark:hover:text-neutral-200;
+  }
+  */
+  p,
+  pre {
+    @apply max-w-[55ch] font-paragraph text-base font-normal text-neutral-600 dark:text-neutral-300;
+    word-spacing: 0.5px;
+    letter-spacing: 0.15px;
+    line-height: 1.55;
+  }
+}
+
+/*
+basically twitter seems to have layout breakpoints like this
+<500: 1fr
+sm:  500-600:  64px 1fr
+md:  600-700:  80px 1fr
+lg:  700-988:  80px 620px
+xl:  988-1078: 80px 620px 288px
+2xl: 1078:1266:80px 620px 358px
+3xl: 1266:up   288px 620px 358px
+*/
+
+@layer components {
+  .feedwidth {
+    width: 100%;
+  }
+
+  @media (min-width: 500px) {
+    .feedwidth {
+      max-width: 436px;
+    }
+  }
+  @media (min-width: 600px) {
+    .feedwidth {
+      max-width: 520px;
+    }
+  }
+  @media (min-width: 700px) {
+    .feedwidth {
+      width: 620px;
+      max-width: 620px;
+    }
+  }
+}
