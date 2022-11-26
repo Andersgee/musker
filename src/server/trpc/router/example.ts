@@ -3,6 +3,7 @@ import { z } from "zod";
 import { router, publicProcedure } from "../trpc";
 
 export const exampleRouter = router({
+  /*
   hello: publicProcedure.input(z.object({ text: z.string().nullish() }).nullish()).query(({ input }) => {
     return {
       greeting: `Hello ${input?.text ?? "world"}`,
@@ -11,4 +12,5 @@ export const exampleRouter = router({
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.example.findMany();
   }),
+  */
 });

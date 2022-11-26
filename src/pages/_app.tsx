@@ -22,10 +22,7 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
         <aside className="hidden bg-purple-500 xl:col-start-3 xl:row-span-2 xl:row-start-1 xl:block">
           <article className="px-2 pt-1">
             <h2>What is this?</h2>
-            <p>
-              Musker is a twitter clone built with the latest (experimental) features of nextjs 13 such as server
-              components and more.
-            </p>
+            <p>Musker is a twitter clone for fun.</p>
           </article>
         </aside>
       </div>
