@@ -43,26 +43,3 @@ xl:  988-1078: 80px 620px 288px
 2xl: 1078:1266:80px 620px 358px
 3xl: 1266:up   288px 620px 358px
 */
-
-@layer components {
-  .feedwidth {
-    width: 100%;
-  }
-
-  @media (min-width: 500px) {
-    .feedwidth {
-      max-width: 436px;
-    }
-  }
-  @media (min-width: 600px) {
-    .feedwidth {
-      max-width: 520px;
-    }
-  }
-  @media (min-width: 700px) {
-    .feedwidth {
-      width: 620px;
-      max-width: 620px;
-    }
-  }
-}

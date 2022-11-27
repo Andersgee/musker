@@ -15,8 +15,8 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
               sm:grid-cols-sm sm:grid-rows-sm md:grid-cols-md lg:grid-cols-lg xl:grid-cols-xl 2xl:grid-cols-2xl 3xl:grid-cols-3xl"
       >
         <Nav className="fixed bottom-0 h-12 w-full border-t bg-yellow-500 sm:h-full sm:w-16 sm:border-t-0 md:w-20 3xl:w-72" />
-        <Header className="feedwidth fixed h-12 bg-orange-500 sm:ml-16 md:ml-20 3xl:ml-72" />
-        <main className="row-start-2 bg-red-500 sm:col-start-2">
+        <Header className="fixed h-12 bg-orange-500 mainwidth sm:ml-16 md:ml-20 3xl:ml-72" />
+        <main className="row-start-2 bg-red-500 mainwidth sm:col-start-2">
           <Component {...pageProps} />
         </main>
         <aside className="hidden bg-purple-500 xl:col-start-3 xl:row-span-2 xl:row-start-1 xl:block">

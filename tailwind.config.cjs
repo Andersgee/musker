@@ -2,6 +2,16 @@
 module.exports = {
   darkMode: "class",
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
+  plugins: [
+    /** @type {import('tailwindcss/types/config').PluginCreator} */
+    ({ addUtilities }) => {
+      addUtilities({
+        ".mainwidth": {
+          "@apply w-full sm:max-w-[436px] md:max-w-[520px] lg:max-w-[620px]": {},
+        },
+      });
+    },
+  ],
   theme: {
     screens: {
       "sm": "500px",
@@ -40,7 +50,6 @@ module.exports = {
       boxShadow: {
         imageborder: "inset 0 2px 4px 0 hsla(0, 0%, 0%, .2)",
       },
-
       gridTemplateColumns: {
         "phone": "1fr",
         "sm": "64px 1fr",
@@ -56,5 +65,4 @@ module.exports = {
       },
     },
   },
-  plugins: [],
 };
