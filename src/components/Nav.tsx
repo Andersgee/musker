@@ -11,7 +11,7 @@ type Props = {
 
 export function Nav({ className = "" }: Props) {
   return (
-    <nav className={` ${className}`}>
+    <nav className={`bg-neutral-50 dark:bg-neutral-900 ${className}`}>
       <ul className="flex items-center sm:flex-col lg:items-start">
         <li className="w-full flex-1">
           <NavLink href="/" label="Home">

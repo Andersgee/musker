@@ -27,20 +27,20 @@ const Page: NextPage = () => {
         return (
           <div key={tweet.id} className="my-0">
             <article className="flex">
-              <UserLink userHandle={tweet.author.handle} className="h-12 w-12">
+              <UserLink userHandle={tweet.author.handle} className="mt-2 h-12 w-12">
                 <img
-                  className="ml-2 mt-2 h-8 w-8 rounded-full shadow-imageborder"
+                  className="h-12 w-12 rounded-full shadow-imageborder"
                   src={tweet.author.image || ""}
                   alt={tweet.author.handle || ""}
                 />
               </UserLink>
               <div className="flex-1">
                 <TweetLink userHandle={tweet.author.handle} tweetId={tweet.id} className="">
-                  <div className="pt-4 pb-2  hover:bg-neutral-100 dark:hover:bg-neutral-800">
+                  <div className="px-2 pt-4 pb-2  hover:bg-neutral-100 dark:hover:bg-neutral-800">
                     <h3 className="text-base font-normal">
                       {tweet.author.handle} - {formatCreatedAt(tweet.createdAt)}
                     </h3>
-                    <p>{tweet.text}</p>
+                    <pre className="text-tweet">{tweet.text}</pre>
                   </div>
                 </TweetLink>
                 <div className="pb-4">actions here</div>
@@ -60,3 +60,9 @@ const Page: NextPage = () => {
 };
 
 export default Page;
+
+/*
+overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+  */
