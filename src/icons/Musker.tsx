@@ -1,6 +1,6 @@
 import type { IconProps } from ".";
 
-export function IconMusker({ className, ...rest }: IconProps) {
+export function IconMusker({ className = "", ...rest }: IconProps) {
   return (
     <svg
       fill="none"
@@ -11,7 +11,7 @@ export function IconMusker({ className, ...rest }: IconProps) {
       width="1063"
       height="519"
       {...rest}
-      className={className}
+      className={`my-4 h-auto w-full ${className}`}
     >
       <path
         id="p1"

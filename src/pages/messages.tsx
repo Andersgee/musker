@@ -1,9 +1,12 @@
 import { type NextPage } from "next";
 
+import { IconMusker } from "src/icons/Musker";
+
 const Page: NextPage = () => {
   return (
     <div>
-      <div>messages</div>
+      <IconMusker />
+      <div className="mb-4">messages... work in progress</div>
     </div>
   );
 };
