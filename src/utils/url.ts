@@ -1,3 +1,5 @@
+import { hashidFromNumber } from "./hashids";
+
 export function getBaseUrl() {
   if (typeof window !== "undefined") return ""; // browser should use relative url
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`; // SSR should use vercel url
@@ -14,4 +16,14 @@ export function absUrl(url: string) {
   } else {
     return url;
   }
+}
+
+export function userpath(userHandle: string | null) {
+  if (!userHandle) return "/";
+  return `/${userHandle}`;
+}
+
+export function tweetpath(userHandle: string | null, tweetId: number) {
+  if (!userHandle) return "/";
+  return `/${userHandle}/${hashidFromNumber(tweetId)}`;
 }

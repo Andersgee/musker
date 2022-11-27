@@ -1,6 +1,7 @@
 import type { inferAsyncReturnType } from "@trpc/server";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
+import { UserLink } from "src/components/Link";
 import { getTweetByHashId, getUserByHandle } from "src/server/common/pagedata";
 import { stringFromParam } from "src/utils/param";
 
@@ -18,6 +19,7 @@ const Page: NextPage<Props> = ({ user, tweet }) => {
 
   return (
     <div>
+      <UserLink userHandle={user.handle}>GO TO USER {user.handle}</UserLink>
       <div>user: {JSON.stringify(user)}</div>
       <div>...</div>
       <div>tweet: {JSON.stringify(tweet)}</div>

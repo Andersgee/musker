@@ -1,5 +1,6 @@
 import { type NextPage } from "next";
 import { useMemo } from "react";
+import { TweetLink } from "src/components/Link";
 import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserverCallback";
 import { trpc } from "src/utils/trpc";
 
@@ -24,7 +25,10 @@ const Page: NextPage = () => {
       {tweets?.map((tweet) => {
         return (
           <div key={tweet.id} className="py-4">
-            {JSON.stringify(tweet)}
+            <TweetLink userHandle={tweet.author.handle} tweetId={tweet.id}>
+              GO TO TWEET
+            </TweetLink>
+            <p>{tweet.text}</p>
             <hr />
           </div>
         );
