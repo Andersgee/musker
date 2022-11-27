@@ -1,7 +1,8 @@
 import { type NextPage } from "next";
 import { useMemo } from "react";
-import { TweetLink } from "src/components/Link";
+import { TweetLink, UserLink } from "src/components/Link";
 import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserverCallback";
+import { formatCreatedAt } from "src/utils/date";
 import { trpc } from "src/utils/trpc";
 
 const Page: NextPage = () => {
@@ -25,11 +26,26 @@ const Page: NextPage = () => {
       {tweets?.map((tweet) => {
         return (
           <div key={tweet.id} className="py-4">
-            <TweetLink userHandle={tweet.author.handle} tweetId={tweet.id}>
-              GO TO TWEET
-            </TweetLink>
-            <p>{tweet.text}</p>
-            <hr />
+            <article className="flex">
+              <UserLink userHandle={tweet.author.handle} className="w-12">
+                <img
+                  className="h-8 w-8 rounded-full shadow-imageborder"
+                  src={tweet.author.image || ""}
+                  alt={tweet.author.handle || ""}
+                />
+              </UserLink>
+              <div className="flex-1 py-2 pl-2 ">
+                <TweetLink userHandle={tweet.author.handle} tweetId={tweet.id}>
+                  <div className=" hover:bg-neutral-100 dark:hover:bg-neutral-800">
+                    <h3 className="text-base font-normal">
+                      {tweet.author.handle} - {formatCreatedAt(tweet.createdAt)}
+                    </h3>
+                    <p>{tweet.text}</p>
+                  </div>
+                </TweetLink>
+                <div>actions here</div>
+              </div>
+            </article>
           </div>
         );
       })}
