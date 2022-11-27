@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { absUrl } from "src/utils/url";
 
 type Props = {
@@ -6,27 +7,39 @@ type Props = {
    */
   title: string;
   /**
-   * The type of your object, e.g., "website" or "video.movie". Depending on the type you specify, other properties may also be required.
+   * A one to two sentence description of your object.
    */
-  type?: string;
+  description: string;
   /**
+   * USAGE WITH THIS COMPONENT: either absolute or relative url such as "/hello" is ok
+   *
    * An image URL which should represent your object within the graph.
    *
    * size should be 1200x630 to be safe
    */
   image: string;
   /**
+   * USAGE WITH THIS COMPONENT: either absolute or relative url such as "/hello" is ok
+   *
    * The canonical URL of your object that will be used as its permanent ID in the graph, e.g., "https://www.imdb.com/title/tt0117500".
    */
   url: string;
   /**
+   * The type of your object, e.g., "website" or "video.movie". Depending on the type you specify, other properties may also be required.
+   */
+  type?: string;
+  /**
+   * USAGE WITH THIS COMPONENT: either absolute or relative url such as "/hello" is ok
+   *
    * A URL to an audio file to accompany this object. example "https://example.com/bond/theme.mp3"
    */
   audio?: string;
   /**
-   * A one to two sentence description of your object.
+   * USAGE WITH THIS COMPONENT: either absolute or relative url such as "/hello" is ok
+   *
+   * A URL to a video file that complements this object.
    */
-  description: string;
+  video?: string;
   /**
    * The word that appears before this object's title in a sentence. An enum of (a, an, the, "", auto). If auto is chosen, the consumer of your data should chose between "a" or "an". Default is "" (blank).
    */
@@ -43,10 +56,6 @@ type Props = {
    * If your object is part of a larger web site, the name which should be displayed for the overall site. e.g., "IMDb".
    */
   site_name?: string;
-  /**
-   * A URL to a video file that complements this object.
-   */
-  video?: string;
 };
 
 /**
@@ -88,7 +97,7 @@ export function SEO({
   video,
 }: Props) {
   return (
-    <>
+    <Head>
       {/* basic */}
       <title>{title}</title>
       <meta charSet="utf-8" />
@@ -127,6 +136,6 @@ export function SEO({
       <meta name="twitter:site" content="@nytimes" />
       <meta name="twitter:creator" content="@SarahMaslinNir" />
       */}
-    </>
+    </Head>
   );
 }

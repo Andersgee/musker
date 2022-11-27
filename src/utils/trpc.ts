@@ -9,6 +9,15 @@ export const trpc = createTRPCNext<AppRouter>({
   config() {
     return {
       transformer: superjson,
+      queryClientConfig: {
+        defaultOptions: {
+          //experiment a bit with the defaults
+          //see https://tanstack.com/query/v4/docs/guides/important-defaults
+          queries: {
+            staleTime: 10000,
+          },
+        },
+      },
       links: [
         loggerLink({
           enabled: (opts) =>

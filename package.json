@@ -17,6 +17,7 @@
     "@trpc/next": "^10.0.0",
     "@trpc/react-query": "^10.0.0",
     "@trpc/server": "^10.0.0",
+    "@vercel/og": "^0.0.21",
     "hashids": "^2.2.10",
     "next": "13.0.2",
     "next-auth": "^4.15.1",
