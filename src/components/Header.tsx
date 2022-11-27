@@ -14,9 +14,9 @@ export function Header({ className = "" }: Props) {
   //const { data: sessionData } = useSession();
   return (
     <div className={className}>
-      <header className="flex h-full items-center justify-between">
+      <header className="flex h-full items-center justify-between border-b backdrop-blur-sm">
         <h1 className="ml-4 font-medium capitalize">{asPath}</h1>
-        <div>pot</div>
+        <div>opt</div>
       </header>
     </div>
   );
