@@ -55,8 +55,6 @@ const Page: NextPage<Props> = ({ user, tweets, tweetId }) => {
 
   return (
     <div>
-      <UserLink userHandle={user.handle}>GO TO USER {user.handle}</UserLink>
-      <div>user.handle: {user.handle}</div>
       {tweets.map((tweet, i) => {
         return (
           <Tweet
