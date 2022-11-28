@@ -17,7 +17,25 @@ export async function getUserByHandle(handle: string) {
 }
 
 export async function getTweetById(id: number) {
-  return await prisma.tweet.findUnique({ where: { id } });
+  return await prisma.tweet.findUnique({
+    where: { id },
+    include: {
+      _count: {
+        select: { replies: true, retweets: true, likes: true },
+      },
+      author: true,
+      repliedToTweet: {
+        select: {
+          id: true,
+          author: {
+            select: {
+              handle: true,
+            },
+          },
+        },
+      },
+    },
+  });
 }
 
 export async function getTweetByHashId(hashId: string) {
@@ -25,5 +43,23 @@ export async function getTweetByHashId(hashId: string) {
   if (!id) {
     return null;
   }
-  return await prisma.tweet.findUnique({ where: { id } });
+  return await prisma.tweet.findUnique({
+    where: { id },
+    include: {
+      _count: {
+        select: { replies: true, retweets: true, likes: true },
+      },
+      author: true,
+      repliedToTweet: {
+        select: {
+          id: true,
+          author: {
+            select: {
+              handle: true,
+            },
+          },
+        },
+      },
+    },
+  });
 }

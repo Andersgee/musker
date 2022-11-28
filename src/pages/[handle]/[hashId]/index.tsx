@@ -2,15 +2,18 @@ import type { inferAsyncReturnType } from "@trpc/server";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { UserLink } from "src/components/Link";
-import { getTweetByHashId, getUserByHandle } from "src/server/common/pagedata";
+import { Tweet } from "src/components/Tweet";
+import { getTweetByHashId, getTweetById, getUserByHandle } from "src/server/common/pagedata";
 import { stringFromParam } from "src/utils/param";
+
+type Tweet = NonNullable<inferAsyncReturnType<typeof getTweetByHashId>>;
 
 type Props = {
   user: NonNullable<inferAsyncReturnType<typeof getUserByHandle>>;
-  tweet: NonNullable<inferAsyncReturnType<typeof getTweetByHashId>>;
+  tweets: Tweet[];
 };
 
-const Page: NextPage<Props> = ({ user, tweet }) => {
+const Page: NextPage<Props> = ({ user, tweets }) => {
   const router = useRouter();
   if (router.isFallback) {
     //possibly skeleton here
@@ -20,9 +23,23 @@ const Page: NextPage<Props> = ({ user, tweet }) => {
   return (
     <div>
       <UserLink userHandle={user.handle}>GO TO USER {user.handle}</UserLink>
-      <div>user: {JSON.stringify(user)}</div>
-      <div>...</div>
-      <div>tweet: {JSON.stringify(tweet)}</div>
+      <div>user.handle: {user.handle}</div>
+      {tweets.map((tweet, i) => {
+        return (
+          <Tweet
+            key={tweet.id}
+            id={tweet.id}
+            handle={tweet.author.handle}
+            image={tweet.author.image}
+            createdAt={tweet.createdAt}
+            text={tweet.text}
+            replies={tweet._count.replies}
+            retweets={tweet._count.retweets}
+            likes={tweet._count.likes}
+            drawReplyLine={i !== tweets.length - 1}
+          />
+        );
+      })}
     </div>
   );
 };
@@ -47,7 +64,17 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
     if (tweet.authorId !== user.id) return { notFound: true };
 
-    const props: Props = { user, tweet };
+    const tweets: Tweet[] = [tweet];
+    let tweetId: number | null | undefined = tweet.repliedToTweetId;
+    while (tweetId) {
+      const tweet: Tweet | null = await getTweetById(tweetId);
+      tweetId = tweet?.repliedToTweetId;
+      if (tweet) {
+        tweets.push(tweet);
+      }
+    }
+
+    const props: Props = { user, tweets: tweets.reverse() };
     return {
       props,
       revalidate: false, //handle this manually

@@ -1,14 +1,10 @@
 import type { inferAsyncReturnType } from "@trpc/server";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
-import { UserLink } from "src/components/Link";
 import { Tweet } from "src/components/Tweet";
 import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserverCallback";
-import { IconDate } from "src/icons/Date";
 import { getUserByHandle } from "src/server/common/pagedata";
-import { formatCreatedAt } from "src/utils/date";
 import { stringFromParam } from "src/utils/param";
 import { trpc } from "src/utils/trpc";
 

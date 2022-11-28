@@ -97,26 +97,6 @@ export default Page;
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return { paths: [], fallback: true };
-  /*
-  return {
-    paths: [
-      { params: { handle: "eu" } },
-      { params: { handle: "aliqua" } },
-      //{params: { handle: "deserunt" }}, //exist but dont generate
-      //{params: { handle: "magna" }}, //exist but dont generate
-      //{params: { handle: "commodo" }}, //exist but dont generate
-      //{params: { handle: "ad" }}, //exist but dont generate
-      { params: { handle: "tempor" } },
-      { params: { handle: "ullamco" } },
-      { params: { handle: "mollit" } },
-      { params: { handle: "laboris" } },
-      { params: { handle: "kekker" } }, //nonexisting but generate anyway?
-      { params: { handle: "berkor" } }, //nonexisting but generate anyway?
-      { params: { handle: "mamma" } }, //nonexisting but generate anyway?
-    ],
-    fallback: true,
-  };
-  */
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
