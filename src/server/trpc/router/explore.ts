@@ -22,14 +22,6 @@ export const explore = router({
             select: { replies: true, retweets: true, likes: true },
           },
           author: true,
-          retweetedToTweet: {
-            include: {
-              _count: {
-                select: { replies: true, retweets: true, likes: true },
-              },
-              author: true,
-            },
-          },
           repliedToTweet: {
             select: {
               id: true,

@@ -1,6 +1,7 @@
 import { type NextPage } from "next";
 import { useMemo } from "react";
 import { TweetLink, UserLink } from "src/components/Link";
+import { TweetActions } from "src/components/TweetActions";
 import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserverCallback";
 import { formatCreatedAt } from "src/utils/date";
 import { trpc } from "src/utils/trpc";
@@ -44,6 +45,7 @@ const Page: NextPage = () => {
                   </div>
                 </TweetLink>
                 <div className="pb-4">actions here</div>
+                <TweetActions userHandle={tweet.author.handle} tweetId={tweet.id} />
               </div>
             </article>
             <hr className="m-0 h-px border-0 bg-gray-200 p-0 dark:bg-gray-700" />
