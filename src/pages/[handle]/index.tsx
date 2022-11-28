@@ -1,7 +1,11 @@
 import type { inferAsyncReturnType } from "@trpc/server";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import Link from "next/link";
 import { useRouter } from "next/router";
+import { UserLink } from "src/components/Link";
+import { IconDate } from "src/icons/Date";
 import { getUserByHandle } from "src/server/common/pagedata";
+import { formatCreatedAt } from "src/utils/date";
 import { stringFromParam } from "src/utils/param";
 
 type Props = {
@@ -17,7 +21,28 @@ const Page: NextPage<Props> = ({ user }) => {
 
   return (
     <div>
-      <div>user: {JSON.stringify(user)}</div>
+      <div className="mx-2">
+        <div className="flex items-baseline justify-between">
+          <UserLink className="h-28 w-28" userHandle={user.handle}>
+            <img src={user.image || ""} alt={user.handle || ""} />
+          </UserLink>
+          <div>
+            <button>follow</button>
+          </div>
+        </div>
+        <h2>{user.handle}</h2>
+        <p>{user.bio?.text}</p>
+        <div className="flex gap-3">
+          <Link href={`/${user.handle}/following`}>{user._count.sentFollows} following</Link>
+          <Link href={`/${user.handle}/followers`}>{user._count.recievedFollows} followers</Link>
+        </div>
+        <span className="flex items-center text-sm">
+          <IconDate className="h-5 w-5" />
+          Joined {formatCreatedAt(user.createdAt)}
+        </span>
+      </div>
+      <div>profile nav here</div>
+      <div>tweets here</div>
     </div>
   );
 };

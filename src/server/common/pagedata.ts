@@ -2,7 +2,18 @@ import { prisma } from "src/server/db/client";
 import { numberFromHashid } from "src/utils/hashids";
 
 export async function getUserByHandle(handle: string) {
-  return await prisma.user.findUnique({ where: { handle } });
+  return await prisma.user.findUnique({
+    where: { handle },
+    include: {
+      bio: true,
+      _count: {
+        select: {
+          sentFollows: true,
+          recievedFollows: true,
+        },
+      },
+    },
+  });
 }
 
 export async function getTweetById(id: number) {
