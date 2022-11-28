@@ -25,7 +25,7 @@ const Page: NextPage = () => {
       <div>
         <TweetCreate onClick={onClick} disabled={isLoading} placeholder="What's happening?" />
         <IconMusker />
-        <div>show tweets here</div>
+        <div>show home tweets here</div>
       </div>
     </>
   );
