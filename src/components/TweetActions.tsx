@@ -65,7 +65,7 @@ export function TweetActions({ userHandle, tweetId, className = "" }: Props) {
   };
 
   return (
-    <div className={`flex w-full gap-4 ${className}`}>
+    <div className={`ml-2 flex w-full gap-4 ${className}`}>
       <TweetLink userHandle={userHandle} tweetId={tweetId} className="group flex w-20 pt-1">
         <IconReply className="mr-2 h-6 w-6 group-hover:text-blue-500" /> {replyCount}
       </TweetLink>

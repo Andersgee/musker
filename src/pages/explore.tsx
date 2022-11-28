@@ -44,7 +44,6 @@ const Page: NextPage = () => {
                     <pre className="text-tweet">{tweet.text}</pre>
                   </div>
                 </TweetLink>
-                <div className="pb-4">actions here</div>
                 <TweetActions userHandle={tweet.author.handle} tweetId={tweet.id} />
               </div>
             </article>

@@ -146,7 +146,7 @@ async function createFollows() {
  * must have "type": "module" in package.json
  * also see package.json script tsnode
  * ```sh
- * yarn tsnode ./scripts/gettargets.ts
+ * yarn tsnode scripts/seed-db.ts
  * ```
  */
 async function main() {
