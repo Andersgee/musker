@@ -11,6 +11,7 @@ type Props = {
 
 export function Header({ className = "" }: Props) {
   const { asPath } = useRouter();
+  const isHome = asPath === "/";
   const isFollowPage =
     asPath.endsWith("followers_you_know") || asPath.endsWith("followers") || asPath.endsWith("following");
 
@@ -29,10 +30,11 @@ export function Header({ className = "" }: Props) {
       </div>
     );
   }
+
   return (
     <div className={className}>
       <header className="flex h-full items-center justify-between border-b backdrop-blur-sm">
-        <h1 className="ml-4 font-medium capitalize">{asPath}</h1>
+        <h1 className="ml-4 font-medium capitalize">{isHome ? "Latest Tweets" : asPath.slice(1)}</h1>
         <div>opt</div>
       </header>
     </div>

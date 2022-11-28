@@ -4,6 +4,7 @@ import { exampleRouter } from "./example";
 import { handle } from "./handle";
 import { explore } from "./explore";
 import { tweet } from "./tweet";
+import { user } from "./user";
 
 export const appRouter = router({
   example: exampleRouter,
@@ -11,6 +12,7 @@ export const appRouter = router({
   handle,
   explore,
   tweet,
+  user,
 });
 
 // export type definition of API

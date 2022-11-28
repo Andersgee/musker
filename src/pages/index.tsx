@@ -1,27 +1,31 @@
 import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { SEO } from "src/components/SEO";
-import { useDialogDispatch } from "src/context/DialogContext";
+import { TweetCreate } from "src/components/TweetCreate";
 import { IconMusker } from "src/icons/Musker";
+import { trpc } from "src/utils/trpc";
 
 const Page: NextPage = () => {
-  const dispatch = useDialogDispatch();
   const { data: session } = useSession();
+  const utils = trpc.useContext();
+
+  const { mutateAsync: create, isLoading } = trpc.tweet.create.useMutation({
+    onSuccess: () => {
+      //utils.home.tweets.invalidate();
+    },
+  });
+
+  const onClick = async (text: string) => {
+    await create({ text });
+  };
+
   return (
     <>
       <SEO title="musker" description="A twitter clone" url="/" image="/og/musker.png" />
       <div>
-        <button
-          onClick={() => {
-            console.log("show..");
-            dispatch({ type: "show", name: "signin" });
-          }}
-        >
-          SHOW SIGN IN{" "}
-        </button>
-        <div>{JSON.stringify(session)}</div>
+        <TweetCreate onClick={onClick} disabled={isLoading} placeholder="What's happening?" />
         <IconMusker />
-        <div className="mb-4">home... work in progress</div>
+        <div>show tweets here</div>
       </div>
     </>
   );
