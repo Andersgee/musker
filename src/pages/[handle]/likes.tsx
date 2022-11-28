@@ -2,7 +2,8 @@ import type { inferAsyncReturnType } from "@trpc/server";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
-import { Tweet } from "src/components/Tweet";
+import { Profile } from "src/components/Profile";
+import { LikedBy, Tweet } from "src/components/Tweet";
 import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserverCallback";
 import { getUserByHandle } from "src/server/common/pagedata";
 import { stringFromParam } from "src/utils/param";
@@ -38,6 +39,14 @@ const Page: NextPage<Props> = ({ user }) => {
 
   return (
     <div>
+      <Profile
+        handle={user.handle}
+        image={user.image}
+        bio={user.bio?.text}
+        createdAt={user.createdAt}
+        sentFollows={user._count.sentFollows}
+        recievedFollows={user._count.recievedFollows}
+      />
       {tweetLikes?.map((tweetLike) => {
         const tweet = tweetLike.tweet;
         return (
@@ -52,8 +61,10 @@ const Page: NextPage<Props> = ({ user }) => {
               retweets={tweet._count.retweets}
               likes={tweet._count.likes}
               repliedToHandle={tweet.repliedToTweet?.author.handle}
-            />
-            <hr className="m-0 h-px border-0 bg-gray-200 p-0 dark:bg-gray-700" />
+            >
+              <LikedBy handle={user.handle} />
+            </Tweet>
+            <hr className="m-0 my-4 h-px border-0 bg-gray-200 p-0 dark:bg-gray-700" />
           </div>
         );
       })}

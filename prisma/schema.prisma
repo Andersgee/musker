@@ -67,7 +67,7 @@ model User {
   recievedFollows  Follow[]          @relation("recievedFollows")
   tweets           Tweet[]
   tweetLikes       TweetLike[]
-  Retweet          Retweet[]
+  retweets         Retweet[]
 }
 
 model Tweet {

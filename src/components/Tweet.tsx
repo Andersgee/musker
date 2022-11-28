@@ -9,6 +9,7 @@ import { IconRewteet } from "src/icons/Retweet";
 import { trpc } from "src/utils/trpc";
 
 type Props = {
+  children?: React.ReactNode;
   id: number;
   image: string | null;
   handle: string | null;
@@ -34,32 +35,36 @@ export function Tweet({
   drawReplyLine = false,
   repliedToHandle,
   className = "",
+  children = null,
 }: Props) {
   return (
-    <article className={`flex ${className}`}>
-      <div className="mt-2 flex flex-col">
-        <UserLink userHandle={handle} className="mt-2 h-12 w-12">
-          <img
-            className="h-12 w-12 rounded-full shadow-imageborder"
-            src={image || undefined}
-            alt={handle || undefined}
-          />
-        </UserLink>
-        <div className="mt-2 flex-1">{drawReplyLine && <div className="ml-6 h-full border-l-2 "></div>}</div>
-      </div>
-      <div className="flex-1">
-        <TweetLink userHandle={handle} tweetId={id}>
-          <div className="px-2 pt-4 pb-2  hover:bg-neutral-100 dark:hover:bg-neutral-800">
-            <h3 className="text-base font-normal">
-              {handle} - {formatCreatedAt(createdAt)}
-            </h3>
-            {repliedToHandle && <div className="text-neutral-500">replying to {repliedToHandle}</div>}
-            <pre className="mt-1 text-tweet">{text}</pre>
-          </div>
-        </TweetLink>
-        <Actions userHandle={handle} tweetId={id} replies={replies} retweets={retweets} likes={likes} />
-      </div>
-    </article>
+    <>
+      {children}
+      <article className={`flex ${className}`}>
+        <div className="mt-0 flex flex-col">
+          <UserLink userHandle={handle} className="mt-2 h-12 w-12">
+            <img
+              className="h-12 w-12 rounded-full shadow-imageborder"
+              src={image || undefined}
+              alt={handle || undefined}
+            />
+          </UserLink>
+          <div className="mt-2 flex-1">{drawReplyLine && <div className="ml-6 h-full border-l-2 "></div>}</div>
+        </div>
+        <div className="flex-1">
+          <TweetLink userHandle={handle} tweetId={id}>
+            <div className="px-2 pt-2 pb-2  hover:bg-neutral-100 dark:hover:bg-neutral-800">
+              <h3 className="text-base font-normal">
+                {handle} - {formatCreatedAt(createdAt)}
+              </h3>
+              {repliedToHandle && <div className="text-neutral-500">replying to {repliedToHandle}</div>}
+              <pre className="mt-1 text-tweet">{text}</pre>
+            </div>
+          </TweetLink>
+          <Actions userHandle={handle} tweetId={id} replies={replies} retweets={retweets} likes={likes} />
+        </div>
+      </article>
+    </>
   );
 }
 
@@ -157,6 +162,44 @@ function RepliedToInfo({ handle, repliedToTweetId, className = "" }: RepliedToPr
         <IconReply className="mr-2 w-4" />
       </div>
       <div>replied</div>
+    </div>
+  );
+}
+
+type RetweetedByProps = {
+  handle?: string | null;
+  className?: string;
+};
+
+export function RetweetedBy({ handle, className = "" }: RetweetedByProps) {
+  return (
+    <div className={`font-paragraph mt-6 flex text-sm ${className}`}>
+      <div className="flex w-14 justify-end">
+        <IconRewteet className="mr-2 w-4" />
+      </div>
+      <UserLink userHandle={handle || null} className="hover:underline">
+        {handle}
+      </UserLink>
+      <div className="ml-1">retweeted</div>
+    </div>
+  );
+}
+
+type LikedByProps = {
+  handle?: string | null;
+  className?: string;
+};
+
+export function LikedBy({ handle, className = "" }: LikedByProps) {
+  return (
+    <div className={`font-paragraph mt-6 flex text-sm ${className}`}>
+      <div className="flex w-14 justify-end">
+        <IconHeart className="mr-2 w-4" />
+      </div>
+      <UserLink userHandle={handle || null} className="hover:underline">
+        {handle}
+      </UserLink>
+      <div className="ml-1">liked</div>
     </div>
   );
 }

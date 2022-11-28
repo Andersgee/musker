@@ -36,7 +36,7 @@ const Page: NextPage = () => {
               likes={tweet._count.likes}
               repliedToHandle={tweet.repliedToTweet?.author.handle}
             />
-            <hr className="m-0 h-px border-0 bg-gray-200 p-0 dark:bg-gray-700" />
+            <hr className="m-0 my-4 h-px border-0 bg-gray-200 p-0 dark:bg-gray-700" />
           </div>
         );
       })}

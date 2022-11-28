@@ -1,13 +1,17 @@
 import type { inferAsyncReturnType } from "@trpc/server";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
+import { UserLink } from "src/components/Link";
 import { Profile } from "src/components/Profile";
 import { RetweetedBy, Tweet } from "src/components/Tweet";
 import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserverCallback";
+import { IconDate } from "src/icons/Date";
 import { getUserByHandle } from "src/server/common/pagedata";
+import { formatCreatedAt } from "src/utils/date";
 import { stringFromParam } from "src/utils/param";
-import { trpc } from "src/utils/trpc";
+import { trpc, type RouterOutputs } from "src/utils/trpc";
 
 //type OutputTweet = RouterOutputs["profile"]["tweetsAndRetweets"]["items"]["tweets"][number];
 //type OutputRetweet = RouterOutputs["profile"]["tweetsAndRetweets"]["items"]["retweets"][number];
@@ -19,7 +23,7 @@ type Props = {
 const Page: NextPage<Props> = ({ user }) => {
   const router = useRouter();
 
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = trpc.profile.tweetsWithoutReplies.useInfiniteQuery(
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = trpc.profile.tweetsWithReplies.useInfiniteQuery(
     { userId: user?.id },
     {
       enabled: !router.isFallback,
