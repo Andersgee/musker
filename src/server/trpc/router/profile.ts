@@ -136,6 +136,16 @@ export const profile = router({
                     select: { replies: true, retweets: true, likes: true },
                   },
                   author: true,
+                  repliedToTweet: {
+                    select: {
+                      id: true,
+                      author: {
+                        select: {
+                          handle: true,
+                        },
+                      },
+                    },
+                  },
                 },
               },
             },

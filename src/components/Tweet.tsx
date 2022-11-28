@@ -19,6 +19,7 @@ type Props = {
   retweets: number;
   likes: number;
   drawReplyLine?: boolean;
+  repliedToHandle?: string | null;
 };
 
 export function Tweet({
@@ -31,6 +32,7 @@ export function Tweet({
   retweets,
   likes,
   drawReplyLine = false,
+  repliedToHandle,
   className = "",
 }: Props) {
   return (
@@ -51,7 +53,8 @@ export function Tweet({
             <h3 className="text-base font-normal">
               {handle} - {formatCreatedAt(createdAt)}
             </h3>
-            <pre className="text-tweet">{text}</pre>
+            {repliedToHandle && <div className="text-neutral-500">replying to {repliedToHandle}</div>}
+            <pre className="mt-1 text-tweet">{text}</pre>
           </div>
         </TweetLink>
         <Actions userHandle={handle} tweetId={id} replies={replies} retweets={retweets} likes={likes} />
@@ -133,6 +136,27 @@ export function Actions({ userHandle, tweetId, replies, retweets, likes, classNa
         <IconHeart className={`mr-2 h-6 w-6 ${hasLiked ? "text-pink-600" : "group-hover:text-pink-300"}`} />
         {likeCount}
       </button>
+    </div>
+  );
+}
+
+type RepliedToProps = {
+  repliedToTweetId: number | null;
+  handle: string | null;
+  className?: string;
+};
+
+function RepliedToInfo({ handle, repliedToTweetId, className = "" }: RepliedToProps) {
+  if (!repliedToTweetId) {
+    return null;
+  }
+
+  return (
+    <div className={`font-paragraph flex text-sm ${className}`}>
+      <div className="flex w-12 justify-end">
+        <IconReply className="mr-2 w-4" />
+      </div>
+      <div>replied</div>
     </div>
   );
 }

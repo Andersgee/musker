@@ -51,6 +51,7 @@ const Page: NextPage<Props> = ({ user }) => {
               replies={tweet._count.replies}
               retweets={tweet._count.retweets}
               likes={tweet._count.likes}
+              repliedToHandle={tweet.repliedToTweet?.author.handle}
             />
             <hr className="m-0 h-px border-0 bg-gray-200 p-0 dark:bg-gray-700" />
           </div>
