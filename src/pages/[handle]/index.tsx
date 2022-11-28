@@ -2,11 +2,15 @@ import type { inferAsyncReturnType } from "@trpc/server";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useMemo } from "react";
 import { UserLink } from "src/components/Link";
+import { Tweet } from "src/components/Tweet";
+import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserverCallback";
 import { IconDate } from "src/icons/Date";
 import { getUserByHandle } from "src/server/common/pagedata";
 import { formatCreatedAt } from "src/utils/date";
 import { stringFromParam } from "src/utils/param";
+import { trpc } from "src/utils/trpc";
 
 type Props = {
   user: NonNullable<inferAsyncReturnType<typeof getUserByHandle>>;
@@ -14,6 +18,22 @@ type Props = {
 
 const Page: NextPage<Props> = ({ user }) => {
   const router = useRouter();
+
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = trpc.profile.tweets.useInfiniteQuery(
+    { userId: user.id },
+    {
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    },
+  );
+  const tweets = useMemo(() => data?.pages.map((page) => page.items).flat(), [data]);
+
+  const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
+    const isVisible = !!entry?.isIntersecting;
+    if (isVisible && hasNextPage !== false) {
+      fetchNextPage();
+    }
+  });
+
   if (router.isFallback) {
     //possibly skeleton here
     return <div></div>;
@@ -42,7 +62,29 @@ const Page: NextPage<Props> = ({ user }) => {
         </span>
       </div>
       <div>profile nav here</div>
-      <div>tweets here</div>
+      {tweets?.map((tweet) => {
+        return (
+          <div key={tweet.id} className="my-0">
+            <Tweet
+              id={tweet.id}
+              handle={tweet.author.handle}
+              image={tweet.author.image}
+              createdAt={tweet.createdAt}
+              text={tweet.text}
+              replies={tweet._count.replies}
+              retweets={tweet._count.retweets}
+              likes={tweet._count.likes}
+            />
+            <hr className="m-0 h-px border-0 bg-gray-200 p-0 dark:bg-gray-700" />
+          </div>
+        );
+      })}
+
+      <div ref={ref} className="mt-4 flex justify-center">
+        <button onClick={() => fetchNextPage()} disabled={!hasNextPage || isFetchingNextPage}>
+          {isFetchingNextPage ? "loading..." : hasNextPage ? "Load More" : ""}
+        </button>
+      </div>
     </div>
   );
 };
