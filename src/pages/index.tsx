@@ -15,7 +15,7 @@ const Page: NextPage = () => {
     },
   });
 
-  const onClick = async (text: string) => {
+  const onCreateClick = async (text: string) => {
     await create({ text });
   };
 
@@ -23,7 +23,7 @@ const Page: NextPage = () => {
     <>
       <SEO title="musker" description="A twitter clone" url="/" image="/og/musker.png" />
       <div>
-        <TweetCreate onClick={onClick} disabled={isLoading} placeholder="What's happening?" />
+        <TweetCreate onClick={onCreateClick} disabled={isLoading} placeholder="What's happening?" />
         <IconMusker />
         <div>show home tweets here</div>
       </div>

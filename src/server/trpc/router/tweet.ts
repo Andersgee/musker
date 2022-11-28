@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { router, protectedProcedure } from "../trpc";
+import { router, protectedProcedure, publicProcedure } from "../trpc";
 //import { type Prisma } from "@prisma/client";
 
 export const tweet = router({
@@ -143,5 +143,43 @@ export const tweet = router({
         return true;
       }
       return false;
+    }),
+
+  replies: publicProcedure
+    .input(
+      z.object({
+        tweetId: z.number(),
+        cursor: z.number().nullish(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const limit = 30;
+
+      const tweet = await ctx.prisma.tweet.findUnique({
+        where: {
+          id: input.tweetId,
+        },
+        select: {
+          replies: {
+            orderBy: { createdAt: "desc" },
+            take: limit + 1,
+            cursor: input.cursor ? { id: input.cursor } : undefined,
+            include: {
+              author: true,
+              _count: {
+                select: { replies: true, retweets: true, likes: true },
+              },
+            },
+          },
+        },
+      });
+      const items = tweet?.replies || [];
+
+      let nextCursor: number | undefined = undefined;
+      if (items.length > limit) {
+        const nextItem = items.pop(); //dont return the one extra
+        nextCursor = nextItem?.id;
+      }
+      return { items, nextCursor };
     }),
 });

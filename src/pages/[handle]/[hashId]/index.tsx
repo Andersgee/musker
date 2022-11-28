@@ -1,20 +1,53 @@
 import type { inferAsyncReturnType } from "@trpc/server";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
+import { useMemo } from "react";
 import { UserLink } from "src/components/Link";
 import { Tweet } from "src/components/Tweet";
+import { TweetCreate } from "src/components/TweetCreate";
+import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserverCallback";
 import { getTweetByHashId, getTweetById, getUserByHandle } from "src/server/common/pagedata";
 import { stringFromParam } from "src/utils/param";
+import { trpc } from "src/utils/trpc";
 
 type Tweet = NonNullable<inferAsyncReturnType<typeof getTweetByHashId>>;
 
 type Props = {
   user: NonNullable<inferAsyncReturnType<typeof getUserByHandle>>;
   tweets: Tweet[];
+  tweetId: number;
 };
 
-const Page: NextPage<Props> = ({ user, tweets }) => {
+const Page: NextPage<Props> = ({ user, tweets, tweetId }) => {
   const router = useRouter();
+  const utils = trpc.useContext();
+
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = trpc.tweet.replies.useInfiniteQuery(
+    { tweetId: tweetId },
+    {
+      enabled: !router.isFallback,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    },
+  );
+  const replies = useMemo(() => data?.pages.map((page) => page.items).flat(), [data]);
+
+  const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
+    const isVisible = !!entry?.isIntersecting;
+    if (isVisible && hasNextPage !== false) {
+      fetchNextPage();
+    }
+  });
+
+  const { mutateAsync: create, isLoading } = trpc.tweet.reply.useMutation({
+    onSuccess: () => {
+      utils.tweet.replies.invalidate({ tweetId });
+    },
+  });
+
+  const onCreateClick = async (text: string) => {
+    await create({ text, tweetId });
+  };
+
   if (router.isFallback) {
     //possibly skeleton here
     return <div></div>;
@@ -40,6 +73,27 @@ const Page: NextPage<Props> = ({ user, tweets }) => {
           />
         );
       })}
+      <TweetCreate onClick={onCreateClick} disabled={isLoading} placeholder="Tweet your reply" />
+      {replies?.map((tweet) => {
+        return (
+          <Tweet
+            key={tweet.id}
+            id={tweet.id}
+            handle={tweet.author.handle}
+            image={tweet.author.image}
+            createdAt={tweet.createdAt}
+            text={tweet.text}
+            replies={tweet._count.replies}
+            retweets={tweet._count.retweets}
+            likes={tweet._count.likes}
+          />
+        );
+      })}
+      <div ref={ref} className="mt-4 flex justify-center">
+        <button onClick={() => fetchNextPage()} disabled={!hasNextPage || isFetchingNextPage}>
+          {isFetchingNextPage ? "loading..." : hasNextPage ? "Load More" : ""}
+        </button>
+      </div>
     </div>
   );
 };
@@ -67,14 +121,14 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     const tweets: Tweet[] = [tweet];
     let tweetId: number | null | undefined = tweet.repliedToTweetId;
     while (tweetId) {
-      const tweet: Tweet | null = await getTweetById(tweetId);
-      tweetId = tweet?.repliedToTweetId;
-      if (tweet) {
-        tweets.push(tweet);
+      const parent: Tweet | null = await getTweetById(tweetId);
+      tweetId = parent?.repliedToTweetId;
+      if (parent) {
+        tweets.push(parent);
       }
     }
 
-    const props: Props = { user, tweets: tweets.reverse() };
+    const props: Props = { user, tweetId: tweet.id, tweets: tweets.reverse() };
     return {
       props,
       revalidate: false, //handle this manually
