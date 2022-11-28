@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useDialogDispatch } from "src/context/DialogContext";
 import { trpc } from "src/utils/trpc";
 import { UserLink } from "./Link";
+import { UserHandleChoose } from "./UserHandleChoose";
 
 type Props = {
   className?: string;
@@ -64,7 +65,7 @@ export function TweetCreate({ onClick, disabled, placeholder, className = "" }: 
               {!userExists && showInfoText && (
                 <div className="rounded-full font-bold text-orange-500">need to sign in first</div>
               )}
-              {!myHandle && showHandlePicker && <div>show handle picker here</div>}
+              {!myHandle && showHandlePicker && <UserHandleChoose />}
             </div>
           </div>
         </div>
