@@ -125,7 +125,7 @@ export function Actions({ userHandle, tweetId, replies, retweets, likes, classNa
       await retweet({ tweetId });
       setRetweetCount((prev) => prev + 1);
     }
-    utils.tweet.hasLiked.invalidate({ tweetId });
+    utils.tweet.hasRetweeted.invalidate({ tweetId });
   };
 
   return (
