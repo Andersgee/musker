@@ -1,24 +1,9 @@
 import { type NextPage } from "next";
-import { useMemo } from "react";
 import { Tweet } from "src/components/Tweet";
-import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserverCallback";
-import { trpc } from "src/utils/trpc";
+import { useExploreList } from "src/hooks/useInfiniteList";
 
 const Page: NextPage = () => {
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = trpc.explore.tweets.useInfiniteQuery(
-    {},
-    {
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
-    },
-  );
-  const tweets = useMemo(() => data?.pages.map((page) => page.items).flat(), [data]);
-
-  const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
-    const isVisible = !!entry?.isIntersecting;
-    if (isVisible && hasNextPage !== false) {
-      fetchNextPage();
-    }
-  });
+  const { tweets, ref, isFetchingNextPage } = useExploreList();
 
   return (
     <div className="">
@@ -41,9 +26,7 @@ const Page: NextPage = () => {
         );
       })}
       <div ref={ref} className="mt-4 flex justify-center">
-        <button onClick={() => fetchNextPage()} disabled={!hasNextPage || isFetchingNextPage}>
-          {isFetchingNextPage ? "loading..." : hasNextPage ? "Load More" : ""}
-        </button>
+        {isFetchingNextPage ? "loading..." : "."}
       </div>
     </div>
   );

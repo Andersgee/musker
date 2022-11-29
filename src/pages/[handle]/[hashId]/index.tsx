@@ -2,7 +2,6 @@ import type { inferAsyncReturnType } from "@trpc/server";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
-import { UserLink } from "src/components/Link";
 import { Tweet } from "src/components/Tweet";
 import { TweetCreate } from "src/components/TweetCreate";
 import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserverCallback";
@@ -90,9 +89,7 @@ const Page: NextPage<Props> = ({ user, tweets, tweetId }) => {
         );
       })}
       <div ref={ref} className="mt-4 flex justify-center">
-        <button onClick={() => fetchNextPage()} disabled={!hasNextPage || isFetchingNextPage}>
-          {isFetchingNextPage ? "loading..." : hasNextPage ? "Load More" : ""}
-        </button>
+        {isFetchingNextPage ? "loading..." : "."}
       </div>
     </div>
   );

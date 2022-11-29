@@ -8,7 +8,7 @@ type Props = {
 export function NavFollows({ handle }: Props) {
   const { pathname } = useRouter();
   return (
-    <div className="mt-4 mb-6 flex justify-evenly">
+    <div className="flex h-16 justify-evenly">
       <NavLink href={`/${handle}/followers_you_know`} active={pathname.endsWith("followers_you_know")}>
         Followers you know
       </NavLink>
@@ -31,7 +31,7 @@ type NavLinkProps = {
 function NavLink({ href, active = false, children }: NavLinkProps) {
   return (
     <Link
-      className={`flex-1 px-3 py-2 text-center hover:bg-neutral-100 dark:hover:bg-neutral-800 ${
+      className={`flex flex-1 items-center justify-center px-3 py-2 text-center hover:bg-neutral-100 dark:hover:bg-neutral-800 ${
         active ? "border-b-2 border-blue-500 text-black dark:text-white" : "text-neutral-700 dark:text-neutral-300"
       }`}
       href={href}

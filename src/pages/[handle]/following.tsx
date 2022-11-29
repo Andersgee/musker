@@ -2,6 +2,7 @@ import type { inferAsyncReturnType } from "@trpc/server";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { NavFollows } from "src/components/NavFollows";
+import { useFollowingList } from "src/hooks/useInfiniteList";
 import { getUserByHandle } from "src/server/common/pagedata";
 import { stringFromParam } from "src/utils/param";
 
@@ -11,6 +12,8 @@ type Props = {
 
 const Page: NextPage<Props> = ({ user }) => {
   const router = useRouter();
+  const { follows, ref, isFetchingNextPage, hasNextPage } = useFollowingList(!router.isFallback, user?.id);
+
   if (router.isFallback) {
     //possibly skeleton here
     return <div></div>;
@@ -19,8 +22,12 @@ const Page: NextPage<Props> = ({ user }) => {
   return (
     <div>
       <NavFollows handle={user.handle || ""} />
-      <div>following for user.id: {user.id} here</div>
-      <div>a couple could be statically generated...</div>
+      {follows?.map((follow) => (
+        <div key={follow.followerId}>{follow.user.handle}</div>
+      ))}
+      <div ref={ref} className="mt-4 flex justify-center">
+        {isFetchingNextPage ? "loading..." : hasNextPage ? "Load More" : ""}
+      </div>
     </div>
   );
 };

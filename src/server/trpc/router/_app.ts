@@ -4,6 +4,7 @@ import { explore } from "./explore";
 import { tweet } from "./tweet";
 import { user } from "./user";
 import { profile } from "./profile";
+import { follows } from "./follows";
 
 export const appRouter = router({
   handle,
@@ -11,6 +12,7 @@ export const appRouter = router({
   profile,
   tweet,
   user,
+  follows,
 });
 
 // export type definition of API
