@@ -2,6 +2,7 @@ import type { inferAsyncReturnType } from "@trpc/server";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { NavFollows } from "src/components/NavFollows";
+import { SEO } from "src/components/SEO";
 import { UserRow } from "src/components/UserRow";
 import { useFollowingList } from "src/hooks/useInfiniteList";
 import { getUserByHandle } from "src/server/common/pagedata";
@@ -21,15 +22,18 @@ const Page: NextPage<Props> = ({ user }) => {
   }
 
   return (
-    <div>
-      <NavFollows handle={user.handle || ""} />
-      {follows.map((follow) => (
-        <UserRow key={follow.userId} userId={follow.userId} handle={follow.user.handle} image={follow.user.image} />
-      ))}
-      <div ref={ref} className="mt-4 flex justify-center">
-        {isFetchingNextPage ? "loading..." : hasNextPage ? "Load More" : ""}
+    <>
+      <SEO title={`${user.handle} / musker`} description="A twitter clone" url="/explore" image="/og/musker.png" />
+      <div>
+        <NavFollows handle={user.handle || ""} />
+        {follows.map((follow) => (
+          <UserRow key={follow.userId} userId={follow.userId} handle={follow.user.handle} image={follow.user.image} />
+        ))}
+        <div ref={ref} className="mt-4 flex justify-center">
+          {isFetchingNextPage ? "loading..." : hasNextPage ? "Load More" : ""}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -1,6 +1,7 @@
 import type { inferAsyncReturnType } from "@trpc/server";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
+import { SEO } from "src/components/SEO";
 import { Tweet } from "src/components/Tweet";
 import { TweetCreate } from "src/components/TweetCreate";
 import { useTweetRepliesList } from "src/hooks/useInfiniteList";
@@ -38,28 +39,13 @@ const Page: NextPage<Props> = ({ user, tweets, tweetId }) => {
   }
 
   return (
-    <div>
-      {tweets.map((tweet, i) => {
-        return (
-          <Tweet
-            key={tweet.id}
-            id={tweet.id}
-            handle={tweet.author.handle}
-            image={tweet.author.image}
-            createdAt={tweet.createdAt}
-            text={tweet.text}
-            replies={tweet._count.replies}
-            retweets={tweet._count.retweets}
-            likes={tweet._count.likes}
-            drawReplyLine={i !== tweets.length - 1}
-          />
-        );
-      })}
-      <TweetCreate onClick={onCreateClick} disabled={isLoading} placeholder="Tweet your reply" />
-      {replies?.map((tweet) => {
-        return (
-          <div key={tweet.id}>
+    <>
+      <SEO title={`Tweet / musker`} description="A twitter clone" url="/explore" image="/og/musker.png" />
+      <div>
+        {tweets.map((tweet, i) => {
+          return (
             <Tweet
+              key={tweet.id}
               id={tweet.id}
               handle={tweet.author.handle}
               image={tweet.author.image}
@@ -68,15 +54,33 @@ const Page: NextPage<Props> = ({ user, tweets, tweetId }) => {
               replies={tweet._count.replies}
               retweets={tweet._count.retweets}
               likes={tweet._count.likes}
+              drawReplyLine={i !== tweets.length - 1}
             />
-            <hr className="m-0 my-4 h-px border-0 bg-gray-200 p-0 dark:bg-gray-700" />
-          </div>
-        );
-      })}
-      <div ref={ref} className="mt-4 flex justify-center">
-        {isFetchingNextPage ? "loading..." : "."}
+          );
+        })}
+        <TweetCreate onClick={onCreateClick} disabled={isLoading} placeholder="Tweet your reply" />
+        {replies?.map((tweet) => {
+          return (
+            <div key={tweet.id}>
+              <Tweet
+                id={tweet.id}
+                handle={tweet.author.handle}
+                image={tweet.author.image}
+                createdAt={tweet.createdAt}
+                text={tweet.text}
+                replies={tweet._count.replies}
+                retweets={tweet._count.retweets}
+                likes={tweet._count.likes}
+              />
+              <hr className="m-0 my-4 h-px border-0 bg-gray-200 p-0 dark:bg-gray-700" />
+            </div>
+          );
+        })}
+        <div ref={ref} className="mt-4 flex justify-center">
+          {isFetchingNextPage ? "loading..." : "."}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -118,7 +118,7 @@ export function Actions({ userHandle, tweetId, replies, retweets, likes, classNa
       return;
     }
 
-    if (hasLiked) {
+    if (hasRetweeted) {
       await unretweet({ tweetId });
       setRetweetCount((prev) => prev - 1);
     } else {
