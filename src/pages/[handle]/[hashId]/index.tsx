@@ -74,17 +74,19 @@ const Page: NextPage<Props> = ({ user, tweets, tweetId }) => {
       <TweetCreate onClick={onCreateClick} disabled={isLoading} placeholder="Tweet your reply" />
       {replies?.map((tweet) => {
         return (
-          <Tweet
-            key={tweet.id}
-            id={tweet.id}
-            handle={tweet.author.handle}
-            image={tweet.author.image}
-            createdAt={tweet.createdAt}
-            text={tweet.text}
-            replies={tweet._count.replies}
-            retweets={tweet._count.retweets}
-            likes={tweet._count.likes}
-          />
+          <div key={tweet.id}>
+            <Tweet
+              id={tweet.id}
+              handle={tweet.author.handle}
+              image={tweet.author.image}
+              createdAt={tweet.createdAt}
+              text={tweet.text}
+              replies={tweet._count.replies}
+              retweets={tweet._count.retweets}
+              likes={tweet._count.likes}
+            />
+            <hr className="m-0 my-4 h-px border-0 bg-gray-200 p-0 dark:bg-gray-700" />
+          </div>
         );
       })}
       <div ref={ref} className="mt-4 flex justify-center">

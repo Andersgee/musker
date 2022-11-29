@@ -1,7 +1,8 @@
+import { format } from "date-fns";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { IconDate } from "src/icons/Date";
-import { formatCreatedAt } from "src/utils/date";
+
 import { UserLink } from "./Link";
 
 type Props = {
@@ -36,7 +37,7 @@ export function Profile({ handle, image, bio, sentFollows, recievedFollows, crea
       </div>
       <span className="flex items-center text-sm">
         <IconDate className="h-5 w-5" />
-        Joined {formatCreatedAt(createdAt)}
+        Joined {format(createdAt, "MMMM yyyy")}
       </span>
       <Nav handle={handle} />
     </div>
