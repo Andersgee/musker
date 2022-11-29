@@ -15,9 +15,10 @@ type Props = {
   user: NonNullable<inferAsyncReturnType<typeof getUserByHandle>>;
   tweets: Tweet[];
   tweetId: number;
+  hashId: string;
 };
 
-const Page: NextPage<Props> = ({ user, tweets, tweetId }) => {
+const Page: NextPage<Props> = ({ user, tweets, tweetId, hashId }) => {
   const router = useRouter();
   const utils = trpc.useContext();
 
@@ -40,7 +41,12 @@ const Page: NextPage<Props> = ({ user, tweets, tweetId }) => {
 
   return (
     <>
-      <SEO title={`Tweet / musker`} description="A twitter clone" url="/explore" image="/og/musker.png" />
+      <SEO
+        title={`Tweet / musker`}
+        description="A twitter clone"
+        url={`/${user.handle}/${hashId}`}
+        image="/og/musker.png"
+      />
       <div>
         {tweets.map((tweet, i) => {
           return (
@@ -114,7 +120,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       }
     }
 
-    const props: Props = { user, tweetId: tweet.id, tweets: tweets.reverse() };
+    const props: Props = { user, tweetId: tweet.id, tweets: tweets.reverse(), hashId };
     return {
       props,
       revalidate: false, //handle this manually

@@ -24,7 +24,12 @@ const Page: NextPage<Props> = ({ user }) => {
 
   return (
     <>
-      <SEO title={`${user.handle} / musker`} description="A twitter clone" url="/explore" image="/og/musker.png" />
+      <SEO
+        title={`${user.handle} / musker`}
+        description="A twitter clone"
+        url={`/${user.handle}/with_replies`}
+        image="/og/musker.png"
+      />
       <div>
         <Profile
           userId={user.id}
