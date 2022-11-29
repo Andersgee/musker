@@ -2,6 +2,7 @@ import type { inferAsyncReturnType } from "@trpc/server";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { NavFollows } from "src/components/NavFollows";
+import { UserRow } from "src/components/UserRow";
 import { useFollowingList } from "src/hooks/useInfiniteList";
 import { getUserByHandle } from "src/server/common/pagedata";
 import { stringFromParam } from "src/utils/param";
@@ -23,7 +24,7 @@ const Page: NextPage<Props> = ({ user }) => {
     <div>
       <NavFollows handle={user.handle || ""} />
       {follows.map((follow) => (
-        <div key={follow.followerId}>{follow.user.handle}</div>
+        <UserRow key={follow.userId} userId={follow.userId} handle={follow.user.handle} image={follow.user.image} />
       ))}
       <div ref={ref} className="mt-4 flex justify-center">
         {isFetchingNextPage ? "loading..." : hasNextPage ? "Load More" : ""}

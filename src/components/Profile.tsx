@@ -2,10 +2,12 @@ import { format } from "date-fns";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { IconDate } from "src/icons/Date";
+import { FollowButton } from "./FollowButton";
 
 import { UserLink } from "./Link";
 
 type Props = {
+  userId: string;
   handle: string | null;
   image: string | null;
   bio?: string | null;
@@ -15,7 +17,16 @@ type Props = {
   className?: string;
 };
 
-export function Profile({ handle, image, bio, sentFollows, recievedFollows, createdAt, className = "" }: Props) {
+export function Profile({
+  userId,
+  handle,
+  image,
+  bio,
+  sentFollows,
+  recievedFollows,
+  createdAt,
+  className = "",
+}: Props) {
   if (!handle) {
     return null;
   }
@@ -25,9 +36,7 @@ export function Profile({ handle, image, bio, sentFollows, recievedFollows, crea
         <UserLink className="h-28 w-28" userHandle={handle}>
           <img src={image || undefined} alt={handle || undefined} />
         </UserLink>
-        <div>
-          <button>follow</button>
-        </div>
+        <FollowButton userId={userId} />
       </div>
       <h2>{handle}</h2>
       <p>{bio}</p>

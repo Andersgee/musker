@@ -24,6 +24,7 @@ const Page: NextPage<Props> = ({ user }) => {
   return (
     <div>
       <Profile
+        userId={user.id}
         handle={user.handle}
         image={user.image}
         bio={user.bio?.text}
