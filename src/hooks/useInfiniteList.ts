@@ -74,7 +74,7 @@ export function useKnownFollowersList(enabled: boolean, userId: string) {
 }
 
 /**
- * `trpc.explore.tweets` for `/`
+ * `trpc.explore.tweets` for `/explore`
  */
 export function useExploreList() {
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = trpc.explore.tweets.useInfiniteQuery(
@@ -197,4 +197,19 @@ export function useTweetRepliesList(enabled: boolean, tweetId: number) {
   });
 
   return { replies, ref, isFetchingNextPage, hasNextPage };
+}
+
+/**
+ * `trpc.home.tweets` for `/`
+ */
+export function useHomeList(enabled: boolean) {
+  const { data } = trpc.home.tweets.useQuery(
+    {},
+    {
+      enabled: enabled,
+    },
+  );
+  const tweets = useMemo(() => data || [], [data]);
+
+  return { tweets };
 }

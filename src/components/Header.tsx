@@ -69,7 +69,7 @@ function Layout({ children, className }: LayoutProps) {
   return (
     <div className={className}>
       <header className="flex h-full items-center justify-between border-b backdrop-blur-sm">
-        <h1 className="ml-4 font-medium capitalize">{children}</h1>
+        <div className="ml-4 font-medium capitalize">{children}</div>
         <div></div>
       </header>
     </div>

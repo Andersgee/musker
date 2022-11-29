@@ -7,15 +7,18 @@ import { trpc } from "src/utils/trpc";
 import { ExploreList } from "src/components/ExploreList";
 import { Button } from "src/ui/Button";
 import { useDialogDispatch } from "src/context/DialogContext";
+import { useHomeList } from "src/hooks/useInfiniteList";
+import { Tweet } from "src/components/Tweet";
+import { ButtonLink } from "src/ui/ButtonLink";
 
 const Page: NextPage = () => {
-  const { data: session, status } = useSession();
-  const userExists = !!session?.user;
+  const { status } = useSession();
+
   const utils = trpc.useContext();
 
   const { mutateAsync: create, isLoading } = trpc.tweet.create.useMutation({
     onSuccess: () => {
-      //utils.home.tweets.invalidate();
+      utils.home.tweets.invalidate();
     },
   });
 
@@ -38,18 +41,52 @@ const Page: NextPage = () => {
 export default Page;
 
 function HomeList() {
-  const tweets = [];
+  const { data: session, status } = useSession();
+  const userExists = !!session?.user;
+  const { tweets } = useHomeList(userExists);
   if (tweets.length === 0) {
     return (
-      <div className="text-center">
-        <IconMusker className="h-auto w-full" />
-        <h3>Go follow some people to make this feed peronal.</h3>
-        <p>(Until then you will just see the general explore feed here)</p>
+      <div>
+        <div>tweets.length: {tweets.length}</div>
+        <div>
+          <IconMusker className="h-auto w-full" />
+          <div className="text-center">
+            <h3>Go follow some people to make this feed peronal.</h3>
+            <p>(Until then showing general explore feed here)</p>
+          </div>
+          <div className="flex justify-center">
+            <ButtonLink href="/explore" className="mt-2">
+              explore
+            </ButtonLink>
+          </div>
+        </div>
+        <hr className="my-4 h-px border-0 bg-gray-200 p-0 dark:bg-gray-700" />
         <ExploreList />
       </div>
     );
   }
-  return <div>HomeList</div>;
+  return (
+    <div className="">
+      {tweets.map((tweet) => {
+        return (
+          <div key={tweet.id} className="my-0">
+            <Tweet
+              id={tweet.id}
+              handle={tweet.author.handle}
+              image={tweet.author.image}
+              createdAt={tweet.createdAt}
+              text={tweet.text}
+              replies={tweet._count.replies}
+              retweets={tweet._count.retweets}
+              likes={tweet._count.likes}
+              repliedToHandle={tweet.repliedToTweet?.author.handle}
+            />
+            <hr className="my-4 h-px border-0 bg-gray-200 p-0 dark:bg-gray-700" />
+          </div>
+        );
+      })}
+    </div>
+  );
 }
 
 function HomeUnAuthenticated() {

@@ -40,7 +40,7 @@ export function TweetCreate({ onClick, disabled, placeholder, className = "" }: 
     <div className={` ${className}`}>
       <div className={`mt-2 flex w-full justify-between ${className}`}>
         <UserImage image={session?.user?.image} handle={myHandle} />
-        <div className="flex-1">
+        <div className="ml-1 flex-1">
           <div className="flex items-center">
             <textarea
               className="h-20 w-full p-1"
@@ -78,8 +78,8 @@ export function TweetCreate({ onClick, disabled, placeholder, className = "" }: 
 function UserImage({ image, handle }: { image: string | null | undefined; handle: string | null | undefined }) {
   if (image && handle) {
     return (
-      <UserLink userHandle={handle} className="flex w-12 items-center justify-center">
-        <img className="h-8 w-8 rounded-full shadow-imageborder" src={image} alt={handle} />
+      <UserLink userHandle={handle} className="w-12">
+        <img className="h-12 w-12 rounded-full shadow-imageborder" src={image} alt={handle} />
       </UserLink>
     );
   }
