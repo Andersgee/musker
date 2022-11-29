@@ -1,13 +1,11 @@
 import type { inferAsyncReturnType } from "@trpc/server";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
-import { useMemo } from "react";
 import { Profile } from "src/components/Profile";
 import { LikedBy, Tweet } from "src/components/Tweet";
-import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserverCallback";
+import { useProfileLikesList } from "src/hooks/useInfiniteList";
 import { getUserByHandle } from "src/server/common/pagedata";
 import { stringFromParam } from "src/utils/param";
-import { trpc } from "src/utils/trpc";
 
 type Props = {
   user: NonNullable<inferAsyncReturnType<typeof getUserByHandle>>;
@@ -15,22 +13,7 @@ type Props = {
 
 const Page: NextPage<Props> = ({ user }) => {
   const router = useRouter();
-
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = trpc.profile.likes.useInfiniteQuery(
-    { userId: user?.id },
-    {
-      enabled: !router.isFallback,
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
-    },
-  );
-  const tweetLikes = useMemo(() => data?.pages.map((page) => page.items).flat(), [data]);
-
-  const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
-    const isVisible = !!entry?.isIntersecting;
-    if (isVisible && hasNextPage !== false) {
-      fetchNextPage();
-    }
-  });
+  const { tweetLikes, ref, isFetchingNextPage } = useProfileLikesList(!router.isFallback, user?.id);
 
   if (router.isFallback) {
     //possibly skeleton here
@@ -47,7 +30,7 @@ const Page: NextPage<Props> = ({ user }) => {
         sentFollows={user._count.sentFollows}
         recievedFollows={user._count.recievedFollows}
       />
-      {tweetLikes?.map((tweetLike) => {
+      {tweetLikes.map((tweetLike) => {
         const tweet = tweetLike.tweet;
         return (
           <div key={tweet.id} className="my-0">
@@ -68,11 +51,8 @@ const Page: NextPage<Props> = ({ user }) => {
           </div>
         );
       })}
-
       <div ref={ref} className="mt-4 flex justify-center">
-        <button onClick={() => fetchNextPage()} disabled={!hasNextPage || isFetchingNextPage}>
-          {isFetchingNextPage ? "loading..." : hasNextPage ? "Load More" : ""}
-        </button>
+        {isFetchingNextPage ? "loading..." : "."}
       </div>
     </div>
   );

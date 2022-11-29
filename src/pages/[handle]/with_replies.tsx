@@ -1,20 +1,11 @@
 import type { inferAsyncReturnType } from "@trpc/server";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import Link from "next/link";
 import { useRouter } from "next/router";
-import { useMemo } from "react";
-import { UserLink } from "src/components/Link";
 import { Profile } from "src/components/Profile";
 import { RetweetedBy, Tweet } from "src/components/Tweet";
-import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserverCallback";
-import { IconDate } from "src/icons/Date";
+import { useProfileTweetsWithRepliesList } from "src/hooks/useInfiniteList";
 import { getUserByHandle } from "src/server/common/pagedata";
-import { formatCreatedAt } from "src/utils/date";
 import { stringFromParam } from "src/utils/param";
-import { trpc, type RouterOutputs } from "src/utils/trpc";
-
-//type OutputTweet = RouterOutputs["profile"]["tweetsAndRetweets"]["items"]["tweets"][number];
-//type OutputRetweet = RouterOutputs["profile"]["tweetsAndRetweets"]["items"]["retweets"][number];
 
 type Props = {
   user: NonNullable<inferAsyncReturnType<typeof getUserByHandle>>;
@@ -23,27 +14,7 @@ type Props = {
 const Page: NextPage<Props> = ({ user }) => {
   const router = useRouter();
 
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = trpc.profile.tweetsWithReplies.useInfiniteQuery(
-    { userId: user?.id },
-    {
-      enabled: !router.isFallback,
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
-    },
-  );
-  const tweetsAndRetweets = useMemo(() => {
-    //flatten and sort by createdAt, (using the retweets own createdAt)
-    const tweets = data?.pages.map((page) => page.items.tweets).flat() || [];
-    const retweets = data?.pages.map((page) => page.items.retweets).flat() || [];
-    const all = [...tweets, ...retweets].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-    return all;
-  }, [data]);
-
-  const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
-    const isVisible = !!entry?.isIntersecting;
-    if (isVisible && hasNextPage !== false) {
-      fetchNextPage();
-    }
-  });
+  const { tweetsAndRetweets, ref, isFetchingNextPage } = useProfileTweetsWithRepliesList(!router.isFallback, user?.id);
 
   if (router.isFallback) {
     //possibly skeleton here
@@ -107,9 +78,7 @@ const Page: NextPage<Props> = ({ user }) => {
       })}
 
       <div ref={ref} className="mt-4 flex justify-center">
-        <button onClick={() => fetchNextPage()} disabled={!hasNextPage || isFetchingNextPage}>
-          {isFetchingNextPage ? "loading..." : hasNextPage ? "Load More" : ""}
-        </button>
+        {isFetchingNextPage ? "loading..." : "."}
       </div>
     </div>
   );

@@ -7,7 +7,7 @@ const Page: NextPage = () => {
 
   return (
     <div className="">
-      {tweets?.map((tweet) => {
+      {tweets.map((tweet) => {
         return (
           <div key={tweet.id} className="my-0">
             <Tweet

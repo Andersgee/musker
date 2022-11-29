@@ -22,7 +22,7 @@ const Page: NextPage<Props> = ({ user }) => {
   return (
     <div>
       <NavFollows handle={user.handle || ""} />
-      {follows?.map((follow) => (
+      {follows.map((follow) => (
         <div key={follow.followerId}>{follow.user.handle}</div>
       ))}
       <div ref={ref} className="mt-4 flex justify-center">

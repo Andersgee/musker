@@ -1,10 +1,9 @@
 import type { inferAsyncReturnType } from "@trpc/server";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
-import { useMemo } from "react";
 import { Tweet } from "src/components/Tweet";
 import { TweetCreate } from "src/components/TweetCreate";
-import { UseIntersectionObserverCallback } from "src/hooks/useIntersectionObserverCallback";
+import { useTweetRepliesList } from "src/hooks/useInfiniteList";
 import { getTweetByHashId, getTweetById, getUserByHandle } from "src/server/common/pagedata";
 import { stringFromParam } from "src/utils/param";
 import { trpc } from "src/utils/trpc";
@@ -21,21 +20,7 @@ const Page: NextPage<Props> = ({ user, tweets, tweetId }) => {
   const router = useRouter();
   const utils = trpc.useContext();
 
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = trpc.tweet.replies.useInfiniteQuery(
-    { tweetId: tweetId },
-    {
-      enabled: !router.isFallback,
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
-    },
-  );
-  const replies = useMemo(() => data?.pages.map((page) => page.items).flat(), [data]);
-
-  const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
-    const isVisible = !!entry?.isIntersecting;
-    if (isVisible && hasNextPage !== false) {
-      fetchNextPage();
-    }
-  });
+  const { replies, ref, isFetchingNextPage } = useTweetRepliesList(!router.isFallback, tweetId);
 
   const { mutateAsync: create, isLoading } = trpc.tweet.reply.useMutation({
     onSuccess: () => {
