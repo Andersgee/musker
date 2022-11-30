@@ -169,7 +169,7 @@ export const tweet = router({
         },
         select: {
           replies: {
-            orderBy: { createdAt: "desc" },
+            orderBy: { id: "desc" },
             take: limit + 1,
             cursor: input.cursor ? { id: input.cursor } : undefined,
             include: {

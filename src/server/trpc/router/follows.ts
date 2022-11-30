@@ -20,7 +20,6 @@ export const follows = router({
         },
         select: {
           recievedFollows: {
-            orderBy: { createdAt: "desc" },
             take: limit + 1,
             cursor: input.cursor
               ? {
@@ -66,7 +65,6 @@ export const follows = router({
         },
         select: {
           sentFollows: {
-            orderBy: { createdAt: "desc" },
             take: limit + 1,
             cursor: input.cursor
               ? {
@@ -129,7 +127,6 @@ export const follows = router({
                 in: myFollowedIds,
               },
             },
-            orderBy: { createdAt: "desc" },
             take: limit + 1,
             cursor: input.cursor
               ? {

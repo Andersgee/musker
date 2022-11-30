@@ -20,10 +20,10 @@ export const profile = router({
         },
         select: {
           tweets: {
+            orderBy: { id: "desc" },
             where: {
               repliedToTweetId: null,
             },
-            orderBy: { createdAt: "desc" },
             cursor: input.cursor?.tweetCursor ? { id: input.cursor.tweetCursor } : undefined,
             take: limit + 1,
             include: {
@@ -131,7 +131,7 @@ export const profile = router({
         },
         select: {
           tweets: {
-            orderBy: { createdAt: "desc" },
+            orderBy: { id: "desc" },
             cursor: input.cursor?.tweetCursor ? { id: input.cursor.tweetCursor } : undefined,
             take: limit + 1,
             include: {
@@ -161,7 +161,7 @@ export const profile = router({
         },
         select: {
           retweets: {
-            orderBy: { createdAt: "desc" },
+            orderBy: { tweetId: "desc" },
             cursor: input.cursor?.retweetCursor
               ? {
                   userId_tweetId: {
@@ -239,7 +239,7 @@ export const profile = router({
         },
         select: {
           tweetLikes: {
-            orderBy: { createdAt: "desc" },
+            orderBy: { tweetId: "desc" },
             take: limit + 1,
             cursor: input.cursor
               ? {

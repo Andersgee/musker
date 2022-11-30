@@ -19,5 +19,7 @@ SHOW TABLES;
 delete from Tweet;
 
 etc
+
+SHOW INDEX FROM Tweet;
 ```
 */

@@ -18,7 +18,7 @@ export const home = router({
         select: {
           //my tweets
           tweets: {
-            orderBy: { createdAt: "desc" },
+            orderBy: { id: "desc" },
             take: takeFromEach,
             include: {
               author: true,
@@ -46,7 +46,7 @@ export const home = router({
                 select: {
                   //from people I follow
                   tweets: {
-                    orderBy: { createdAt: "desc" },
+                    orderBy: { id: "desc" },
                     take: takeFromEach,
                     include: {
                       author: true,

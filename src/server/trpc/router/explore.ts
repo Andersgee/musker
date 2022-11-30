@@ -13,7 +13,7 @@ export const explore = router({
       const limit = 30;
 
       const items = await ctx.prisma.tweet.findMany({
-        orderBy: { createdAt: "desc" },
+        orderBy: { id: "desc" },
         cursor: input.cursor ? { id: input.cursor } : undefined,
         take: limit + 1,
         //where: {authorId: userId},

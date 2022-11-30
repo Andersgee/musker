@@ -30,7 +30,7 @@ async function test1() {
         },
         select: {
           tweets: {
-            orderBy: { createdAt: "desc" },
+            orderBy: { id: "desc" },
             take: take,
             include: {
               author: true,
@@ -73,7 +73,7 @@ async function test2() {
         in: followedIdsAndMe,
       },
     },
-    orderBy: { createdAt: "desc" },
+    orderBy: { id: "desc" },
     take: totalTake,
   });
 
@@ -95,7 +95,7 @@ async function test3() {
           user: {
             select: {
               tweets: {
-                orderBy: { createdAt: "desc" },
+                orderBy: { id: "desc" },
                 take: take,
               },
             },
