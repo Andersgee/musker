@@ -34,7 +34,11 @@ export function Profile({
     <div className={`mx-2 ${className}`}>
       <div className="flex items-baseline justify-between">
         <UserLink className="h-28 w-28" userHandle={handle}>
-          <img src={image || undefined} alt={handle || undefined} />
+          <img
+            className="h-28 w-28 rounded-full shadow-imageborder"
+            src={image || undefined}
+            alt={handle || undefined}
+          />
         </UserLink>
         <FollowButton userId={userId} />
       </div>
