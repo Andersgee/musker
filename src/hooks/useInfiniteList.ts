@@ -203,7 +203,7 @@ export function useTweetRepliesList(enabled: boolean, tweetId: number) {
  * `trpc.home.tweets` for `/`
  */
 export function useHomeList(enabled: boolean) {
-  const { data } = trpc.home.tweets.useQuery(
+  const { data, isLoading } = trpc.home.tweets.useQuery(
     {},
     {
       enabled: enabled,
@@ -211,5 +211,5 @@ export function useHomeList(enabled: boolean) {
   );
   const tweets = useMemo(() => data || [], [data]);
 
-  return { tweets };
+  return { tweets, isLoading };
 }

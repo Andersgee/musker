@@ -41,13 +41,12 @@ const Page: NextPage = () => {
 export default Page;
 
 function HomeList() {
-  const { data: session, status } = useSession();
+  const { data: session, status: sessionStatus } = useSession();
   const userExists = !!session?.user;
-  const { tweets } = useHomeList(userExists);
-  if (tweets.length === 0) {
+  const { tweets, isLoading } = useHomeList(userExists);
+  if (!(sessionStatus === "loading") && !isLoading && tweets.length < 1) {
     return (
       <div>
-        <div>tweets.length: {tweets.length}</div>
         <div>
           <IconMusker className="h-auto w-full" />
           <div className="text-center">
