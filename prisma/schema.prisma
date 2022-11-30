@@ -29,6 +29,7 @@ model Account {
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -37,6 +38,8 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model VerificationToken {
@@ -57,17 +60,14 @@ model User {
   sessions      Session[]
 
   //app
-  createdAt        DateTime          @default(now())
-  handle           String?           @unique
-  bio              UserBio?
-  sentMessages     Message[]         @relation("sentMessages")
-  receivedMessages Message[]         @relation("receivedMessages")
-  messageReactions MessageReaction[]
-  sentFollows      Follow[]          @relation("sentFollows")
-  recievedFollows  Follow[]          @relation("recievedFollows")
-  tweets           Tweet[]
-  tweetLikes       TweetLike[]
-  retweets         Retweet[]
+  createdAt       DateTime    @default(now())
+  handle          String?     @unique
+  bio             UserBio?
+  sentFollows     Follow[]    @relation("sentFollows")
+  recievedFollows Follow[]    @relation("recievedFollows")
+  tweets          Tweet[]
+  tweetLikes      TweetLike[]
+  retweets        Retweet[]
 }
 
 model Tweet {
@@ -83,6 +83,9 @@ model Tweet {
   replies          Tweet[] @relation("reply")
   repliedToTweet   Tweet?  @relation("reply", fields: [repliedToTweetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   repliedToTweetId Int?
+
+  @@index([authorId])
+  @@index([repliedToTweetId])
 }
 
 model TweetLike {
@@ -93,6 +96,8 @@ model TweetLike {
   tweetId   Int
 
   @@id([userId, tweetId])
+  @@index([userId])
+  @@index([tweetId])
 }
 
 model Retweet {
@@ -103,6 +108,8 @@ model Retweet {
   tweetId   Int
 
   @@id([userId, tweetId])
+  @@index([userId])
+  @@index([tweetId])
 }
 
 model UserBio {
@@ -127,26 +134,6 @@ model Follow {
   followerId String
 
   @@id([userId, followerId])
-}
-
-model Message {
-  id         String            @id @default(cuid())
-  createdAt  DateTime          @default(now())
-  author     User              @relation(name: "sentMessages", fields: [authorId], references: [id], onDelete: Cascade)
-  authorId   String
-  receiver   User              @relation(name: "receivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
-  receiverId String
-  reactions  MessageReaction[]
-  text       String            @db.VarChar(280)
-}
-
-model MessageReaction {
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
-  messageId String
-  text      String
-
-  @@id([userId, messageId])
+  @@index([userId])
+  @@index([followerId])
 }
