@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { router, protectedProcedure, publicProcedure } from "../trpc";
-//import { type Prisma } from "@prisma/client";
 
 export const tweet = router({
   create: protectedProcedure
@@ -9,13 +8,22 @@ export const tweet = router({
         text: z.string(),
       }),
     )
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.tweet.create({
+    .mutation(async ({ ctx, input }) => {
+      const tweet = await ctx.prisma.tweet.create({
         data: {
           authorId: ctx.session.user.id,
           text: input.text,
         },
       });
+
+      /*
+      const hashId = hashidFromNumber(tweet.id);
+      const handle = tweet.author.handle;
+      const path = `/${handle}/${hashId}`;
+      console.log(`tweet.create, revalidate(${path})`);
+      revalidate(path);
+      */
+      return tweet;
     }),
   reply: protectedProcedure
     .input(

@@ -123,7 +123,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     const props: Props = { user, tweetId: tweet.id, tweets: tweets.reverse(), hashId };
     return {
       props,
-      revalidate: false, //handle this manually
+      revalidate: 60,
     };
   } catch (error) {
     throw new Error("something went wrong");
