@@ -43,8 +43,9 @@ export default Page;
 function HomeList() {
   const { data: session, status: sessionStatus } = useSession();
   const userExists = !!session?.user;
-  const { tweets, isLoading } = useHomeList(userExists);
-  if (!(sessionStatus === "loading") && !isLoading && tweets.length < 1) {
+  const { tweets, ref, isFetchingNextPage } = useHomeList(userExists);
+
+  if (!(sessionStatus === "loading") && tweets.length < 1) {
     return (
       <div>
         <div>
@@ -84,6 +85,9 @@ function HomeList() {
           </div>
         );
       })}
+      <div ref={ref} className="mt-4 flex justify-center">
+        {isFetchingNextPage ? "loading..." : "."}
+      </div>
     </div>
   );
 }

@@ -200,10 +200,10 @@ export function useTweetRepliesList(enabled: boolean, tweetId: number) {
 }
 
 /**
- * `trpc.home.tweets` for `/`
+ * `trpc.home.tweetsOld` for `/`
  */
-export function useHomeList(enabled: boolean) {
-  const { data, isLoading } = trpc.home.tweets.useQuery(
+export function useHomeListOld(enabled: boolean) {
+  const { data, isLoading } = trpc.home.tweetsOld.useQuery(
     {},
     {
       enabled: enabled,
@@ -212,4 +212,31 @@ export function useHomeList(enabled: boolean) {
   const tweets = useMemo(() => data || [], [data]);
 
   return { tweets, isLoading };
+}
+
+/**
+ * `trpc.home.tweets` for `/`
+ */
+export function useHomeList(enabled: boolean) {
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = trpc.home.tweets.useInfiniteQuery(
+    {},
+    {
+      enabled: enabled,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    },
+  );
+  const tweets = useMemo(() => {
+    return data?.pages.flatMap((page) => page.items || []) || [];
+    //const list = data?.pages.flatMap((page) => page.items || []) || [];
+    //return list?.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()) || [];
+  }, [data]);
+
+  const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
+    const isVisible = !!entry?.isIntersecting;
+    if (isVisible && hasNextPage !== false) {
+      fetchNextPage();
+    }
+  });
+
+  return { tweets, ref, isFetchingNextPage, hasNextPage };
 }

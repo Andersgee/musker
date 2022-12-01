@@ -16,13 +16,7 @@ export const explore = router({
         orderBy: { id: "desc" },
         cursor: input.cursor ? { id: input.cursor } : undefined,
         take: limit + 1,
-        //where: {authorId: userId},
         include: {
-          /*
-          _count: {
-            select: { replies: true, retweets: true, likes: true },
-          },
-          */
           author: true,
           repliedToTweet: {
             select: {

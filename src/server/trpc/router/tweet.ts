@@ -210,11 +210,6 @@ export const tweet = router({
             cursor: input.cursor ? { id: input.cursor } : undefined,
             include: {
               author: true,
-              /*
-              _count: {
-                select: { replies: true, retweets: true, likes: true },
-              },
-              */
             },
           },
         },
