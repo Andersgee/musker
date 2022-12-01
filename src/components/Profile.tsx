@@ -1,7 +1,9 @@
 import { format } from "date-fns";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useMemo } from "react";
 import { IconDate } from "src/icons/Date";
+import { trpc } from "src/utils/trpc";
 import { FollowButton } from "./FollowButton";
 
 import { UserLink } from "./Link";
@@ -27,6 +29,8 @@ export function Profile({
   createdAt,
   className = "",
 }: Props) {
+  const { data: followCount } = trpc.profile.followCount.useQuery({ userId });
+
   if (!handle) {
     return null;
   }
@@ -45,8 +49,8 @@ export function Profile({
       <h2>{handle}</h2>
       <p>{bio}</p>
       <div className="flex gap-3">
-        <Link href={`/${handle}/following`}>{sentFollows} following</Link>
-        <Link href={`/${handle}/followers`}>{recievedFollows} followers</Link>
+        <Link href={`/${handle}/following`}>{followCount?.sentFollowsCount ?? sentFollows} following</Link>
+        <Link href={`/${handle}/followers`}>{followCount?.recievedFollowsCount ?? recievedFollows} followers</Link>
       </div>
       <span className="flex items-center text-sm">
         <IconDate className="h-5 w-5" />

@@ -22,11 +22,19 @@ export function FollowButton({ userId }: Props) {
   const { mutateAsync: follow } = trpc.user.follow.useMutation({
     onSuccess: () => {
       utils.user.isFollowing.invalidate({ userId });
+      utils.profile.followCount.invalidate({ userId });
+      if (session?.user?.id) {
+        utils.profile.followCount.invalidate({ userId: session.user.id });
+      }
     },
   });
   const { mutateAsync: unfollow } = trpc.user.unfollow.useMutation({
     onSuccess: () => {
       utils.user.isFollowing.invalidate({ userId });
+      utils.profile.followCount.invalidate({ userId });
+      if (session?.user?.id) {
+        utils.profile.followCount.invalidate({ userId: session.user.id });
+      }
     },
   });
 

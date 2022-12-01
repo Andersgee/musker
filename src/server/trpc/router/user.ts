@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { router, protectedProcedure } from "../trpc";
+import { router, protectedProcedure, publicProcedure } from "../trpc";
 
 export const user = router({
   isFollowing: protectedProcedure
@@ -20,33 +20,44 @@ export const user = router({
       if (follow) return true;
       return false;
     }),
-
-  follow: protectedProcedure.input(z.object({ userId: z.string() })).mutation(({ input, ctx }) => {
-    return ctx.prisma.follow.create({
-      data: {
-        userId: input.userId,
-        followerId: ctx.session.user.id,
-      },
+  follow: protectedProcedure.input(z.object({ userId: z.string() })).mutation(async ({ input, ctx }) => {
+    const userId = input.userId;
+    const followerId = ctx.session.user.id;
+    const create = ctx.prisma.follow.create({
+      data: { userId, followerId },
     });
+    const update1 = ctx.prisma.user.update({
+      where: { id: userId },
+      data: { recievedFollowsCount: { increment: 1 } },
+    });
+    const update2 = ctx.prisma.user.update({
+      where: { id: followerId },
+      data: { sentFollowsCount: { increment: 1 } },
+    });
+    const [follow] = await Promise.all([create, update1, update2]);
+    return follow;
   }),
-  unfollow: protectedProcedure.input(z.object({ userId: z.string() })).mutation(({ input, ctx }) => {
-    return ctx.prisma.follow.delete({
-      where: {
-        userId_followerId: {
-          userId: input.userId,
-          followerId: ctx.session.user.id,
-        },
-      },
+  unfollow: protectedProcedure.input(z.object({ userId: z.string() })).mutation(async ({ input, ctx }) => {
+    const userId = input.userId;
+    const followerId = ctx.session.user.id;
+    const del = ctx.prisma.follow.delete({
+      where: { userId_followerId: { userId, followerId } },
     });
+    const update1 = ctx.prisma.user.update({
+      where: { id: userId },
+      data: { recievedFollowsCount: { decrement: 1 } },
+    });
+    const update2 = ctx.prisma.user.update({
+      where: { id: followerId },
+      data: { sentFollowsCount: { decrement: 1 } },
+    });
+    const [follow] = await Promise.all([del, update1, update2]);
+    return follow;
   }),
   myHandle: protectedProcedure.query(async ({ ctx }) => {
     const user = await ctx.prisma.user.findUnique({
-      where: {
-        id: ctx.session.user.id,
-      },
-      select: {
-        handle: true,
-      },
+      where: { id: ctx.session.user.id },
+      select: { handle: true },
     });
     return user?.handle;
   }),

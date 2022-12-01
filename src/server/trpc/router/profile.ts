@@ -255,4 +255,21 @@ export const profile = router({
       }
       return { items, nextCursor };
     }),
+
+  followCount: publicProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      const user = await ctx.prisma.user.findUnique({
+        where: { id: input.userId },
+        select: {
+          recievedFollowsCount: true,
+          sentFollowsCount: true,
+        },
+      });
+      return user;
+    }),
 });
