@@ -1,5 +1,5 @@
 import { formatCreatedAt } from "src/utils/date";
-import { TweetLink, UserLink } from "./Link";
+import { TweetLink, UserImageLink, UserLink } from "./Link";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useDialogDispatch } from "src/context/DialogContext";
@@ -42,13 +42,7 @@ export function Tweet({
       {children}
       <article className={`flex ${className}`}>
         <div className="mt-0 flex flex-col">
-          <UserLink userHandle={handle} className="mt-2 h-12 w-12">
-            <img
-              className="h-12 w-12 rounded-full shadow-imageborder"
-              src={image || undefined}
-              alt={handle || undefined}
-            />
-          </UserLink>
+          <UserImageLink handle={handle} image={image} />
           <div className="mt-2 flex-1">{drawReplyLine && <div className="ml-6 h-full border-l-2 "></div>}</div>
         </div>
         <div className="flex-1">

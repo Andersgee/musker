@@ -11,11 +11,16 @@ type Props = {
 export function UserRow({ userId, image, handle, className = "" }: Props) {
   return (
     <>
-      <div className={`my-4 flex ${className}`}>
-        <UserLink userHandle={handle} className="flex flex-1 items-center">
-          <img src={image || undefined} alt={handle || undefined} className="h-8 w-8 rounded-full shadow-imageborder" />
-          <h3>{handle}</h3>
+      <div className={`my-4 mx-2 flex ${className}`}>
+        <UserLink userHandle={handle} className="group flex h-12 w-12 flex-1 items-center">
+          <img
+            className="h-12 w-12 rounded-full shadow-imageborder group-hover:opacity-80 group-hover:transition-opacity"
+            src={image || undefined}
+            alt={handle || undefined}
+          />
+          <h3 className="ml-2 group-hover:opacity-80">{handle}</h3>
         </UserLink>
+
         <FollowButton userId={userId} />
       </div>
       <hr className="m-0 my-4 h-px border-0 bg-gray-200 p-0 dark:bg-gray-700" />

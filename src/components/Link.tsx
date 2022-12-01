@@ -29,3 +29,19 @@ export function TweetLink({ userHandle, tweetId, children, className = "" }: Twe
     </Link>
   );
 }
+
+type UserImageLinkProps = {
+  handle: string | null;
+  image: string | null;
+};
+export function UserImageLink({ handle, image }: UserImageLinkProps) {
+  return (
+    <UserLink userHandle={handle} className="group mt-2 h-12 w-12">
+      <img
+        className="h-12 w-12 rounded-full shadow-imageborder group-hover:opacity-80 group-hover:transition-opacity"
+        src={image || undefined}
+        alt={handle || undefined}
+      />
+    </UserLink>
+  );
+}
