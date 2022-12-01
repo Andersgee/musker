@@ -32,14 +32,21 @@ export const tweet = router({
         text: z.string(),
       }),
     )
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.tweet.create({
+    .mutation(async ({ ctx, input }) => {
+      const create = ctx.prisma.tweet.create({
         data: {
           repliedToTweetId: input.tweetId,
           authorId: ctx.session.user.id,
           text: input.text,
         },
       });
+      const update = ctx.prisma.tweet.update({
+        where: { id: input.tweetId },
+        data: { repliesCount: { increment: 1 } },
+        select: { id: true },
+      });
+      const [tweet] = await Promise.all([create, update]);
+      return tweet;
     }),
   delete: protectedProcedure
     .input(
@@ -58,13 +65,20 @@ export const tweet = router({
         tweetId: z.number(),
       }),
     )
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.tweetLike.create({
+    .mutation(async ({ ctx, input }) => {
+      const create = ctx.prisma.tweetLike.create({
         data: {
           tweetId: input.tweetId,
           userId: ctx.session.user.id,
         },
       });
+      const update = ctx.prisma.tweet.update({
+        where: { id: input.tweetId },
+        data: { likesCount: { increment: 1 } },
+        select: { id: true },
+      });
+      const [like] = await Promise.all([create, update]);
+      return like;
     }),
   unlike: protectedProcedure
     .input(
@@ -72,8 +86,8 @@ export const tweet = router({
         tweetId: z.number(),
       }),
     )
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.tweetLike.delete({
+    .mutation(async ({ ctx, input }) => {
+      const del = ctx.prisma.tweetLike.delete({
         where: {
           userId_tweetId: {
             tweetId: input.tweetId,
@@ -81,6 +95,13 @@ export const tweet = router({
           },
         },
       });
+      const update = ctx.prisma.tweet.update({
+        where: { id: input.tweetId },
+        data: { likesCount: { decrement: 1 } },
+        select: { id: true },
+      });
+      const [like] = await Promise.all([del, update]);
+      return like;
     }),
   hasLiked: protectedProcedure
     .input(
@@ -108,13 +129,21 @@ export const tweet = router({
         tweetId: z.number(),
       }),
     )
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.retweet.create({
+    .mutation(async ({ ctx, input }) => {
+      const create = ctx.prisma.retweet.create({
         data: {
           tweetId: input.tweetId,
           userId: ctx.session.user.id,
         },
       });
+
+      const update = ctx.prisma.tweet.update({
+        where: { id: input.tweetId },
+        data: { retweetsCount: { increment: 1 } },
+        select: { id: true },
+      });
+      const [retweet] = await Promise.all([create, update]);
+      return retweet;
     }),
   unretweet: protectedProcedure
     .input(
@@ -122,8 +151,8 @@ export const tweet = router({
         tweetId: z.number(),
       }),
     )
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.retweet.delete({
+    .mutation(async ({ ctx, input }) => {
+      const del = ctx.prisma.retweet.delete({
         where: {
           userId_tweetId: {
             tweetId: input.tweetId,
@@ -131,6 +160,13 @@ export const tweet = router({
           },
         },
       });
+      const update = ctx.prisma.tweet.update({
+        where: { id: input.tweetId },
+        data: { retweetsCount: { decrement: 1 } },
+        select: { id: true },
+      });
+      const [retweet] = await Promise.all([del, update]);
+      return retweet;
     }),
   hasRetweeted: protectedProcedure
     .input(

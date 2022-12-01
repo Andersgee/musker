@@ -49,9 +49,9 @@ const Page: NextPage<Props> = ({ user }) => {
                 image={tweet.author.image}
                 createdAt={tweet.createdAt}
                 text={tweet.text}
-                replies={0}
-                retweets={0}
-                likes={0}
+                replies={tweet.repliesCount}
+                retweets={tweet.retweetsCount}
+                likes={tweet.likesCount}
                 repliedToHandle={tweet.repliedToTweet?.author.handle}
               >
                 <LikedBy handle={user.handle} />

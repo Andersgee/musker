@@ -3,6 +3,55 @@ import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 
 export const home = router({
+  tweetshmm: protectedProcedure
+    .input(
+      z.object({
+        cursor: z.number().nullish(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const sessionUserId = ctx.session.user.id;
+      const user = await ctx.prisma.user.findUnique({
+        where: { id: sessionUserId },
+        select: {
+          sentFollows: {
+            select: {
+              userId: true,
+            },
+          },
+        },
+      });
+      const followedIds = user?.sentFollows.map((follow) => follow.userId) || [];
+      const followedIdsAndMe = [...followedIds, sessionUserId];
+
+      const users = await Promise.all(
+        followedIdsAndMe.map((id) =>
+          ctx.prisma.user.findUnique({
+            where: { id },
+            select: {
+              tweets: {
+                orderBy: { id: "desc" },
+                take: 1,
+                include: {
+                  author: true,
+                },
+              },
+            },
+          }),
+        ),
+      );
+
+      const cursors = users.map((user) => user?.tweets.at(-1)?.id);
+
+      //const cursors = followedUsers?.map(user=>user.)
+
+      const tweets = users
+        ?.map((user) => user?.tweets || [])
+        .flat()
+        .sort((b, a) => b.createdAt.getTime() - a.createdAt.getTime());
+
+      return tweets;
+    }),
   tweets: protectedProcedure
     .input(
       z.object({
@@ -31,15 +80,6 @@ export const home = router({
                   },
                 },
               },
-              /*
-              _count: {
-                select: {
-                  likes: true,
-                  replies: true,
-                  retweets: true,
-                },
-              },
-              */
             },
           },
           sentFollows: {
@@ -61,15 +101,6 @@ export const home = router({
                           },
                         },
                       },
-                      /*
-                      _count: {
-                        select: {
-                          likes: true,
-                          replies: true,
-                          retweets: true,
-                        },
-                      },
-                      */
                     },
                   },
                 },

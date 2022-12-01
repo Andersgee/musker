@@ -110,6 +110,23 @@ async function test3() {
   console.log("tweets.length: ", tweets.length);
 }
 
+/*
+better way:
+1. log the query actual query 
+    https://www.prisma.io/docs/concepts/components/prisma-client/working-with-prismaclient/logging
+2. run the raw query with EXPLAIN ANALYZE in front
+    https://planetscale.com/docs/concepts/billing#caveats
+
+
+so 
+```
+pscale shell musker main
+
+EXPLAIN ANALYZE select * from User;
+```
+
+*/
+
 test3();
 /*
 before

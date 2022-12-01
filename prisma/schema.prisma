@@ -59,14 +59,16 @@ model User {
   sessions      Session[]
 
   //app
-  createdAt       DateTime    @default(now())
-  handle          String?     @unique
-  bio             UserBio?
-  sentFollows     Follow[]    @relation("sentFollows")
-  recievedFollows Follow[]    @relation("recievedFollows")
-  tweets          Tweet[]
-  tweetLikes      TweetLike[]
-  retweets        Retweet[]
+  createdAt            DateTime    @default(now())
+  handle               String?     @unique
+  bio                  UserBio?
+  sentFollowsCount     Int         @default(0)
+  sentFollows          Follow[]    @relation("sentFollows")
+  recievedFollowsCount Int         @default(0)
+  recievedFollows      Follow[]    @relation("recievedFollows")
+  tweets               Tweet[]
+  tweetLikes           TweetLike[]
+  retweets             Retweet[]
 }
 
 model Tweet {
@@ -76,9 +78,13 @@ model Tweet {
   authorId  String
   text      String   @db.VarChar(280)
 
-  likes    TweetLike[]
-  retweets Retweet[]
+  likesCount Int         @default(0)
+  likes      TweetLike[]
 
+  retweetsCount Int       @default(0)
+  retweets      Retweet[]
+
+  repliesCount     Int     @default(0)
   replies          Tweet[] @relation("reply")
   repliedToTweet   Tweet?  @relation("reply", fields: [repliedToTweetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   repliedToTweetId Int?

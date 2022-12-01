@@ -3,6 +3,10 @@ import { z } from "zod";
 import { router, publicProcedure } from "../trpc";
 
 export const profile = router({
+  /**
+   * 1. tweets that are not replies
+   * 2. retweets
+   */
   tweets: publicProcedure
     .input(
       z.object({
@@ -14,7 +18,7 @@ export const profile = router({
       const limit = 30;
       const userId = input.userId;
 
-      const userWithTweets = await ctx.prisma.user.findUnique({
+      const user = await ctx.prisma.user.findUnique({
         where: {
           id: userId,
         },
@@ -45,15 +49,6 @@ export const profile = router({
               },
             },
           },
-        },
-      });
-      const tweets = userWithTweets?.tweets || [];
-
-      const userWithRetweets = await ctx.prisma.user.findUnique({
-        where: {
-          id: input.userId,
-        },
-        select: {
           retweets: {
             orderBy: { createdAt: "desc" },
             cursor: input.cursor?.retweetCursor
@@ -95,7 +90,9 @@ export const profile = router({
           },
         },
       });
-      const retweets = userWithRetweets?.retweets || [];
+
+      const tweets = user?.tweets || [];
+      const retweets = user?.retweets || [];
 
       let tweetCursor: number | undefined = undefined;
       if (tweets.length > limit) {
@@ -104,20 +101,20 @@ export const profile = router({
       }
 
       let retweetCursor: number | undefined = undefined;
-
       if (retweets.length > limit) {
         const nextItem = retweets.pop(); //dont return the one extra
         retweetCursor = nextItem?.tweet.id;
       }
-
-      //return a single list of tweets... need to sort it again
-      //const tweets = tweets1.concat(tweets2).sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
 
       return {
         items: { tweets, retweets },
         nextCursor: tweetCursor || retweetCursor ? { tweetCursor, retweetCursor } : undefined,
       };
     }),
+  /**
+   * 1. tweets
+   * 2. retweets
+   */
   tweetsWithReplies: publicProcedure
     .input(
       z.object({
@@ -129,7 +126,7 @@ export const profile = router({
       const limit = 30;
       const userId = input.userId;
 
-      const userWithTweets = await ctx.prisma.user.findUnique({
+      const user = await ctx.prisma.user.findUnique({
         where: {
           id: userId,
         },
@@ -157,15 +154,6 @@ export const profile = router({
               },
             },
           },
-        },
-      });
-      const tweets = userWithTweets?.tweets || [];
-
-      const userWithRetweets = await ctx.prisma.user.findUnique({
-        where: {
-          id: input.userId,
-        },
-        select: {
           retweets: {
             orderBy: { tweetId: "desc" },
             cursor: input.cursor?.retweetCursor
@@ -207,7 +195,9 @@ export const profile = router({
           },
         },
       });
-      const retweets = userWithRetweets?.retweets || [];
+
+      const tweets = user?.tweets || [];
+      const retweets = user?.retweets || [];
 
       let tweetCursor: number | undefined = undefined;
       if (tweets.length > limit) {
@@ -216,20 +206,19 @@ export const profile = router({
       }
 
       let retweetCursor: number | undefined = undefined;
-
       if (retweets.length > limit) {
         const nextItem = retweets.pop(); //dont return the one extra
         retweetCursor = nextItem?.tweet.id;
       }
-
-      //return a single list of tweets... need to sort it again
-      //const tweets = tweets1.concat(tweets2).sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
 
       return {
         items: { tweets, retweets },
         nextCursor: tweetCursor || retweetCursor ? { tweetCursor, retweetCursor } : undefined,
       };
     }),
+  /**
+   * tweetLikes (with tweet included)
+   */
   likes: publicProcedure
     .input(
       z.object({

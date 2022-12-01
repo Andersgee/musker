@@ -16,6 +16,11 @@ type TweetLikes = Prisma.TweetLikeCreateManyInput[];
 type Retweets = Prisma.RetweetCreateManyInput[];
 type Follows = Prisma.FollowCreateManyInput[];
 
+function createdAt() {
+  return undefined; //db default is now()
+  //return randomDate() //for debug
+}
+
 async function createUsers() {
   const users: Users = [];
   for (let i = 0; i < N_USERS; i++) {
@@ -56,15 +61,15 @@ async function createHandles() {
 async function createTweets() {
   const users = await prisma.user.findMany();
   const tweets: Tweets = [];
-  users.forEach((user) => {
+  for (const user of users) {
     for (let i = 0; i < N_TWEETS_PER_USER; i++) {
       tweets.push({
         authorId: user.id,
         text: randomText(),
-        createdAt: randomDate(),
+        createdAt: createdAt(),
       });
     }
-  });
+  }
   return await prisma.tweet.createMany({ data: tweets });
 }
 
@@ -72,74 +77,136 @@ async function createTweetReplies() {
   const users = await prisma.user.findMany();
   const tweets = await prisma.tweet.findMany();
 
-  const replies: Tweets = [];
-  users.forEach((user) => {
+  for (const user of users) {
     for (let i = 0; i < N_TWEETREPLIES_PER_USER; i++) {
       const repliedToTweetId = tweets[randInt(tweets.length)]!.id;
-      replies.push({
-        repliedToTweetId,
-        authorId: user.id,
-        text: randomText(),
-        createdAt: randomDate(),
+      await prisma.tweet.create({
+        data: {
+          repliedToTweetId,
+          authorId: user.id,
+          text: randomText(),
+          createdAt: createdAt(),
+        },
+      });
+      await prisma.tweet.update({
+        where: {
+          id: repliedToTweetId,
+        },
+        data: {
+          repliesCount: {
+            increment: 1,
+          },
+        },
       });
     }
-  });
-  return await prisma.tweet.createMany({ data: replies });
+  }
 }
 
 async function createTweetLikes() {
   const users = await prisma.user.findMany();
   const tweets = await prisma.tweet.findMany();
 
-  const tweetLikes: TweetLikes = [];
-  users.forEach((user) => {
+  //const tweetLikes: TweetLikes = [];
+  for (const user of users) {
     const userId = user.id;
     const indexes = randUniqueInts(tweets.length, N_TWEETLIKES_PER_USER);
-    indexes.forEach((i) => {
-      tweetLikes.push({
-        userId,
-        tweetId: tweets[i]!.id,
-        createdAt: randomDate(),
+
+    for (const i of indexes) {
+      const tweetId = tweets[i]!.id;
+      await prisma.tweetLike.create({
+        data: {
+          userId,
+          tweetId,
+          createdAt: createdAt(),
+        },
       });
-    });
-  });
-  return await prisma.tweetLike.createMany({ data: tweetLikes });
+      await prisma.tweet.update({
+        where: {
+          id: tweetId,
+        },
+        data: {
+          likesCount: {
+            increment: 1,
+          },
+        },
+      });
+    }
+  }
 }
 
 async function createRetweets() {
   const users = await prisma.user.findMany();
   const tweets = await prisma.tweet.findMany();
 
-  const retweets: Retweets = [];
-  users.forEach((user) => {
+  //const retweets: Retweets = [];
+  for (const user of users) {
     const userId = user.id;
     const indexes = randUniqueInts(tweets.length, N_RETWEETS_PER_USER);
-    indexes.forEach((i) => {
-      retweets.push({
-        userId: userId,
-        tweetId: tweets[i]!.id,
-        createdAt: randomDate(),
+    for (const i of indexes) {
+      const tweetId = tweets[i]!.id;
+      await prisma.retweet.create({
+        data: {
+          userId: userId,
+          tweetId,
+          createdAt: createdAt(),
+        },
       });
-    });
-  });
-  return await prisma.retweet.createMany({ data: retweets });
+      await prisma.tweet.update({
+        where: {
+          id: tweetId,
+        },
+        data: {
+          retweetsCount: {
+            increment: 1,
+          },
+        },
+      });
+    }
+  }
+  //return await prisma.retweet.createMany({ data: retweets });
 }
 
 async function createFollows() {
   const users = await prisma.user.findMany();
 
-  const follows: Follows = [];
-  users.forEach((user, i) => {
-    const indexes = randUniqueInts(users.length, 3).filter((x) => x !== i);
+  //const follows: Follows = [];
+  let userIndex = 0;
+  for (const user of users) {
+    const indexes = randUniqueInts(users.length, 3).filter((int) => int !== userIndex);
+    userIndex += 1;
 
-    indexes.forEach((i) => {
-      follows.push({
-        userId: users[i]!.id,
-        followerId: user.id,
+    for (const i of indexes) {
+      const userId = users[i]!.id;
+      const followerId = user.id;
+      await prisma.follow.create({
+        data: {
+          userId,
+          followerId,
+        },
       });
-    });
-  });
-  return await prisma.follow.createMany({ data: follows });
+      await prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          recievedFollowsCount: {
+            increment: 1,
+          },
+        },
+      });
+      await prisma.user.update({
+        where: {
+          id: followerId,
+        },
+        data: {
+          sentFollowsCount: {
+            increment: 1,
+          },
+        },
+      });
+    }
+  }
+  //return await prisma.follow.createMany({ data: follows });
 }
 
 /**

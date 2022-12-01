@@ -21,5 +21,17 @@ delete from Tweet;
 etc
 
 SHOW INDEX FROM Tweet;
+
+
+delete from Account;
+delete from Follow;
+delete from Retweet;
+delete from Session;
+delete from Tweet;
+delete from TweetLike;
+delete from User;
+delete from UserBio;
+delete from VerificationToken;
+
 ```
 */
