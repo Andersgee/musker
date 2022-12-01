@@ -36,8 +36,8 @@ const Page: NextPage<Props> = ({ user }) => {
           image={user.image}
           bio={user.bio?.text}
           createdAt={user.createdAt}
-          sentFollows={user._count.sentFollows}
-          recievedFollows={user._count.recievedFollows}
+          sentFollows={0}
+          recievedFollows={0}
         />
         {tweetLikes.map((tweetLike) => {
           const tweet = tweetLike.tweet;
@@ -49,9 +49,9 @@ const Page: NextPage<Props> = ({ user }) => {
                 image={tweet.author.image}
                 createdAt={tweet.createdAt}
                 text={tweet.text}
-                replies={tweet._count.replies}
-                retweets={tweet._count.retweets}
-                likes={tweet._count.likes}
+                replies={0}
+                retweets={0}
+                likes={0}
                 repliedToHandle={tweet.repliedToTweet?.author.handle}
               >
                 <LikedBy handle={user.handle} />

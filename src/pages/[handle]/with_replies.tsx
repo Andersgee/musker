@@ -37,8 +37,8 @@ const Page: NextPage<Props> = ({ user }) => {
           image={user.image}
           bio={user.bio?.text}
           createdAt={user.createdAt}
-          sentFollows={user._count.sentFollows}
-          recievedFollows={user._count.recievedFollows}
+          sentFollows={0}
+          recievedFollows={0}
         />
         {tweetsAndRetweets.map((tweetOrRetweet) => {
           if ("author" in tweetOrRetweet) {
@@ -52,9 +52,9 @@ const Page: NextPage<Props> = ({ user }) => {
                   image={tweet.author.image}
                   createdAt={tweet.createdAt}
                   text={tweet.text}
-                  replies={tweet._count.replies}
-                  retweets={tweet._count.retweets}
-                  likes={tweet._count.likes}
+                  replies={0}
+                  retweets={0}
+                  likes={0}
                   repliedToHandle={tweet.repliedToTweet?.author.handle}
                 />
                 <hr className="m-0 my-4 h-px border-0 bg-gray-200 p-0 dark:bg-gray-700" />
@@ -73,9 +73,9 @@ const Page: NextPage<Props> = ({ user }) => {
                   image={tweet.author.image}
                   createdAt={tweet.createdAt}
                   text={tweet.text}
-                  replies={tweet._count.replies}
-                  retweets={tweet._count.retweets}
-                  likes={tweet._count.likes}
+                  replies={0}
+                  retweets={0}
+                  likes={0}
                   repliedToHandle={tweet.repliedToTweet?.author.handle}
                 >
                   <RetweetedBy handle={retweet.user.handle} />

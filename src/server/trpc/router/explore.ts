@@ -18,9 +18,11 @@ export const explore = router({
         take: limit + 1,
         //where: {authorId: userId},
         include: {
+          /*
           _count: {
             select: { replies: true, retweets: true, likes: true },
           },
+          */
           author: true,
           repliedToTweet: {
             select: {

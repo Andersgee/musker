@@ -6,12 +6,14 @@ export async function getUserByHandle(handle: string) {
     where: { handle },
     include: {
       bio: true,
+      /*
       _count: {
         select: {
           sentFollows: true,
           recievedFollows: true,
         },
       },
+      */
     },
   });
 }
@@ -20,9 +22,11 @@ export async function getTweetById(id: number) {
   return await prisma.tweet.findUnique({
     where: { id },
     include: {
+      /*
       _count: {
         select: { replies: true, retweets: true, likes: true },
       },
+      */
       author: true,
       repliedToTweet: {
         select: {
@@ -46,9 +50,11 @@ export async function getTweetByHashId(hashId: string) {
   return await prisma.tweet.findUnique({
     where: { id },
     include: {
+      /*
       _count: {
         select: { replies: true, retweets: true, likes: true },
       },
+      */
       author: true,
       repliedToTweet: {
         select: {

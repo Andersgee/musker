@@ -27,9 +27,11 @@ export const profile = router({
             cursor: input.cursor?.tweetCursor ? { id: input.cursor.tweetCursor } : undefined,
             take: limit + 1,
             include: {
+              /*
               _count: {
                 select: { replies: true, retweets: true, likes: true },
               },
+              */
               author: true,
               repliedToTweet: {
                 select: {
@@ -71,9 +73,11 @@ export const profile = router({
               },
               tweet: {
                 include: {
+                  /*
                   _count: {
                     select: { replies: true, retweets: true, likes: true },
                   },
+                  */
                   author: true,
                   repliedToTweet: {
                     select: {
@@ -135,9 +139,11 @@ export const profile = router({
             cursor: input.cursor?.tweetCursor ? { id: input.cursor.tweetCursor } : undefined,
             take: limit + 1,
             include: {
+              /*
               _count: {
                 select: { replies: true, retweets: true, likes: true },
               },
+              */
               author: true,
               repliedToTweet: {
                 select: {
@@ -179,9 +185,11 @@ export const profile = router({
               },
               tweet: {
                 include: {
+                  /*
                   _count: {
                     select: { replies: true, retweets: true, likes: true },
                   },
+                  */
                   author: true,
                   repliedToTweet: {
                     select: {
@@ -252,9 +260,11 @@ export const profile = router({
             include: {
               tweet: {
                 include: {
+                  /*
                   _count: {
                     select: { replies: true, retweets: true, likes: true },
                   },
+                  */
                   author: true,
                   repliedToTweet: {
                     select: {

@@ -31,6 +31,7 @@ export const home = router({
                   },
                 },
               },
+              /*
               _count: {
                 select: {
                   likes: true,
@@ -38,6 +39,7 @@ export const home = router({
                   retweets: true,
                 },
               },
+              */
             },
           },
           sentFollows: {
@@ -59,6 +61,7 @@ export const home = router({
                           },
                         },
                       },
+                      /*
                       _count: {
                         select: {
                           likes: true,
@@ -66,6 +69,7 @@ export const home = router({
                           retweets: true,
                         },
                       },
+                      */
                     },
                   },
                 },

@@ -75,9 +75,9 @@ function HomeList() {
               image={tweet.author.image}
               createdAt={tweet.createdAt}
               text={tweet.text}
-              replies={tweet._count.replies}
-              retweets={tweet._count.retweets}
-              likes={tweet._count.likes}
+              replies={0}
+              retweets={0}
+              likes={0}
               repliedToHandle={tweet.repliedToTweet?.author.handle}
             />
             <hr className="my-4 h-px border-0 bg-gray-200 p-0 dark:bg-gray-700" />

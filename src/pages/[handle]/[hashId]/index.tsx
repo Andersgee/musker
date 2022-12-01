@@ -57,9 +57,9 @@ const Page: NextPage<Props> = ({ user, tweets, tweetId, hashId }) => {
               image={tweet.author.image}
               createdAt={tweet.createdAt}
               text={tweet.text}
-              replies={tweet._count.replies}
-              retweets={tweet._count.retweets}
-              likes={tweet._count.likes}
+              replies={0}
+              retweets={0}
+              likes={0}
               drawReplyLine={i !== tweets.length - 1}
             />
           );
@@ -74,9 +74,9 @@ const Page: NextPage<Props> = ({ user, tweets, tweetId, hashId }) => {
                 image={tweet.author.image}
                 createdAt={tweet.createdAt}
                 text={tweet.text}
-                replies={tweet._count.replies}
-                retweets={tweet._count.retweets}
-                likes={tweet._count.likes}
+                replies={0}
+                retweets={0}
+                likes={0}
               />
               <hr className="m-0 my-4 h-px border-0 bg-gray-200 p-0 dark:bg-gray-700" />
             </div>
@@ -111,6 +111,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     if (tweet.authorId !== user.id) return { notFound: true };
 
     const tweets: Tweet[] = [tweet];
+    /*
     let tweetId: number | null | undefined = tweet.repliedToTweetId;
     while (tweetId) {
       const parent: Tweet | null = await getTweetById(tweetId);
@@ -119,6 +120,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         tweets.push(parent);
       }
     }
+    */
 
     const props: Props = { user, tweetId: tweet.id, tweets: tweets.reverse(), hashId };
     return {
