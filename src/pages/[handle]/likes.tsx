@@ -36,8 +36,8 @@ const Page: NextPage<Props> = ({ user }) => {
           image={user.image}
           bio={user.bio?.text}
           createdAt={user.createdAt}
-          sentFollows={0}
-          recievedFollows={0}
+          sentFollows={user.sentFollowsCount}
+          recievedFollows={user.recievedFollowsCount}
         />
         {tweetLikes.map((tweetLike) => {
           const tweet = tweetLike.tweet;
