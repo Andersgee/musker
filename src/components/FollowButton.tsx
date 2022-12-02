@@ -26,6 +26,7 @@ export function FollowButton({ userId }: Props) {
       if (session?.user?.id) {
         utils.profile.followCount.invalidate({ userId: session.user.id });
       }
+      utils.home.tweets.invalidate();
     },
   });
   const { mutateAsync: unfollow } = trpc.user.unfollow.useMutation({
@@ -35,6 +36,7 @@ export function FollowButton({ userId }: Props) {
       if (session?.user?.id) {
         utils.profile.followCount.invalidate({ userId: session.user.id });
       }
+      utils.home.tweets.invalidate();
     },
   });
 
