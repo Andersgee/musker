@@ -13,7 +13,7 @@ export function IconNotifications({ className, width = 24, height = 24, ...rest 
       {...rest}
       className={className}
     >
-      <path fill="none" d="M 40 170 l 10 -80 c 10 -80 130 -80 140 0 l 10 80 z M 160 170 a 40 40 0 0 1 -80 0" />
+      <path d="M 40 170 l 10 -80 c 10 -80 130 -80 140 0 l 10 80 z M 160 170 a 40 40 0 0 1 -80 0" />
     </svg>
   );
 }

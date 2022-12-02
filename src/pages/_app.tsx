@@ -38,7 +38,7 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
                 <Component {...pageProps} />
               </main>
               <aside className="hidden xl:col-start-3 xl:row-span-2 xl:row-start-1 xl:block">
-                <article className="px-2 pt-1">
+                <article className="px-2 pt-2">
                   <h2>What is this?</h2>
                   <p>Musker is a twitter clone for fun.</p>
                 </article>

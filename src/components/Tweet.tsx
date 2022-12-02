@@ -39,8 +39,8 @@ export function Tweet({
 }: Props) {
   return (
     <>
-      {children}
-      <article className={`flex ${className}`}>
+      <div className="mx-2 sm:mx-0">{children}</div>
+      <article className={`mx-2 flex sm:mx-0 ${className}`}>
         <div className="mt-0 flex flex-col">
           <UserImageLink handle={handle} image={image} />
           <div className="mt-2 flex-1">{drawReplyLine && <div className="ml-6 h-full border-l-2 "></div>}</div>
