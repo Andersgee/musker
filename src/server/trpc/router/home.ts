@@ -26,41 +26,72 @@ export const home = router({
       const followedIdsAndMe = [...followedIds, sessionUserId];
 
       const users = await Promise.all(
-        followedIdsAndMe.map((userId) =>
-          ctx.prisma.user.findUnique({
-            where: { id: userId },
-            select: {
-              id: true,
-              tweets: {
-                orderBy: { id: "desc" },
-                cursor: input.cursor?.[userId] ? { id: input.cursor[userId] } : undefined,
-                take: limit + 1,
-                include: {
-                  author: true,
-                  repliedToTweet: {
-                    select: {
-                      author: {
-                        select: {
-                          handle: true,
+        followedIdsAndMe.map((userId) => {
+          if (input.cursor == null) {
+            //this is the 'first' page, use undefined cursor
+            return ctx.prisma.user.findUnique({
+              where: { id: userId },
+              select: {
+                id: true,
+                tweets: {
+                  orderBy: { id: "desc" },
+                  take: limit + 1,
+                  include: {
+                    author: true,
+                    repliedToTweet: {
+                      select: {
+                        author: {
+                          select: {
+                            handle: true,
+                          },
                         },
                       },
                     },
                   },
                 },
               },
-            },
-          }),
-        ),
+            });
+          }
+
+          if (input.cursor[userId] !== undefined) {
+            //this user has cursor
+            return ctx.prisma.user.findUnique({
+              where: { id: userId },
+              select: {
+                id: true,
+                tweets: {
+                  orderBy: { id: "desc" },
+                  cursor: { id: input.cursor[userId] },
+                  take: limit + 1,
+                  include: {
+                    author: true,
+                    repliedToTweet: {
+                      select: {
+                        author: {
+                          select: {
+                            handle: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            });
+          }
+
+          return null;
+        }),
       );
 
-      const cursor: Record<string, number> | undefined = {};
+      const nextCursor: Record<string, number> = {};
       for (const user of users) {
-        if (!user?.id || !user?.tweets) continue;
+        if (!user) continue;
 
         if (user.tweets.length > limit) {
           const nextItem = user.tweets.pop(); //dont return the one extra
-          if (nextItem?.id) {
-            cursor[user.id] = nextItem.id;
+          if (nextItem?.id !== undefined) {
+            nextCursor[user.id] = nextItem.id;
           }
         }
       }
@@ -69,7 +100,7 @@ export const home = router({
         .flatMap((user) => user?.tweets || [])
         .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
-      return { items: tweets, nextCursor: cursor };
+      return { items: tweets, nextCursor };
     }),
   tweetsOld: protectedProcedure
     .input(
