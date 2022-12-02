@@ -12,6 +12,7 @@ export function useDialogDispatch() {
 
 const initialState = {
   signin: false,
+  editprofile: false,
   confirm: false,
   warning: false,
 };
@@ -30,7 +31,7 @@ export function DialogProvider({ children }: { children: React.ReactNode }) {
 }
 
 type Type = "show" | "hide" | "toggle";
-type Name = "signin" | "confirm" | "warning";
+type Name = "signin" | "editprofile" | "confirm" | "warning";
 
 type Dialogs = typeof initialState;
 type Action = { type: Type; name: Name };

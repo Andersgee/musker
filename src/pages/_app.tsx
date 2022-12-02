@@ -10,6 +10,7 @@ import PlausibleProvider from "next-plausible";
 import { Montserrat } from "@next/font/google";
 import { SignInDialog } from "src/components/Signin";
 import { DialogProvider } from "src/context/DialogContext";
+import { EditProfileDialog } from "src/components/EditProfile";
 
 const montserrat = Montserrat({
   weight: "variable",
@@ -24,6 +25,7 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
         <SessionProvider session={session}>
           <DialogProvider>
             <SignInDialog />
+            <EditProfileDialog />
             <div
               className={`${montserrat.className}
               container grid 

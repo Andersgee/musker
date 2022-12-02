@@ -53,7 +53,9 @@ export function FollowButton({ userId }: Props) {
   return (
     <button
       onClick={handleClick}
-      className={`w-26 group rounded-full border border-neutral-500 px-3 py-2 font-bold ${
+      className={`${
+        isFollowing === undefined ? "invisible" : ""
+      } w-26 group rounded-full border border-neutral-500 px-3 py-2 font-bold ${
         isFollowing
           ? "w-28 bg-neutral-100 text-neutral-800 hover:bg-red-50 dark:bg-black dark:text-neutral-100"
           : "bg-black text-neutral-300 hover:bg-neutral-800 dark:bg-white dark:text-neutral-700 dark:hover:bg-neutral-200"

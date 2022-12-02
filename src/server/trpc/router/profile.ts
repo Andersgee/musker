@@ -1,6 +1,7 @@
+import { revalidate } from "src/server/common/revalidate";
 import { z } from "zod";
 
-import { router, publicProcedure } from "../trpc";
+import { router, publicProcedure, protectedProcedure } from "../trpc";
 
 export const profile = router({
   /**
@@ -270,6 +271,35 @@ export const profile = router({
           sentFollowsCount: true,
         },
       });
+      return user;
+    }),
+  updateBio: protectedProcedure
+    .input(
+      z.object({
+        text: z.string().max(280),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const user = await ctx.prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          bio: {
+            upsert: {
+              create: {
+                text: input.text,
+              },
+              update: {
+                text: input.text,
+              },
+            },
+          },
+        },
+      });
+      await revalidate(`/${user.handle}`);
+
       return user;
     }),
 });

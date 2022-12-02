@@ -1,8 +1,11 @@
 import { format } from "date-fns";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useMemo } from "react";
+import { useDialogDispatch } from "src/context/DialogContext";
+
 import { IconDate } from "src/icons/Date";
+import { Button } from "src/ui/Button";
 import { trpc } from "src/utils/trpc";
 import { FollowButton } from "./FollowButton";
 
@@ -30,6 +33,8 @@ export function Profile({
   className = "",
 }: Props) {
   const { data: followCount } = trpc.profile.followCount.useQuery({ userId });
+  const { data: session } = useSession();
+  const dialogDispatch = useDialogDispatch();
 
   if (!handle) {
     return null;
@@ -44,10 +49,16 @@ export function Profile({
             alt={handle || undefined}
           />
         </UserLink>
-        <FollowButton userId={userId} />
+        {userId === session?.user?.id ? (
+          <Button onClick={() => dialogDispatch({ type: "show", name: "editprofile" })}>Edit profile</Button>
+        ) : (
+          <FollowButton userId={userId} />
+        )}
       </div>
       <h2>{handle}</h2>
+
       <p>{bio}</p>
+
       <div className="flex gap-3">
         <Link href={`/${handle}/following`}>{followCount?.sentFollowsCount ?? sentFollows} following</Link>
         <Link href={`/${handle}/followers`}>{followCount?.recievedFollowsCount ?? recievedFollows} followers</Link>
