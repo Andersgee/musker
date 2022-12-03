@@ -20,7 +20,7 @@ export const handle = router({
           handle: input.text,
         },
       });
-      revalidate(`/${user.handle}`);
+      await revalidate(`/${user.handle}`);
       return user;
     }),
   getMy: protectedProcedure.query(async ({ ctx }) => {

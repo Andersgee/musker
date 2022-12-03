@@ -18,32 +18,34 @@ const Page: NextPage = () => {
 
       <div>
         {conversations?.map((conversation) => (
-          <Link
-            href={`/messages/${hashidFromNumber(conversation.id)}`}
-            key={conversation.id}
-            className="group my-2 mx-2 flex items-center justify-between gap-2"
-          >
-            <div className="flex gap-2">
-              <div className="flex items-center gap-0.5">
-                <IconDate className="h-4 w-4" />
-                <div className="text-base font-medium">{formatCreatedAt(conversation.lastActivityAt)}</div>
-              </div>
-              <div className="flex w-60 justify-start">
-                <p className="truncate group-hover:opacity-80">{conversation.messages?.[0]?.text}</p>
-              </div>
-            </div>
-            <div className="flex flex-shrink-0">
-              {conversation.users.map(({ user }) => (
-                <div key={`${conversation.id}-${user.id}`} className="ml-[-24px]">
-                  <img
-                    className="h-12 w-12 rounded-full shadow-imageborder group-hover:opacity-80 group-hover:transition-opacity"
-                    src={user.image || undefined}
-                    alt={user.handle || undefined}
-                  />
+          <div key={conversation.id}>
+            <Link
+              href={`/messages/${hashidFromNumber(conversation.id)}`}
+              className="group flex items-center justify-between gap-2 px-2 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+            >
+              <div className="flex gap-2">
+                <div className="flex items-center gap-0.5">
+                  <IconDate className="h-4 w-4" />
+                  <div className="text-base font-medium">{formatCreatedAt(conversation.lastActivityAt)}</div>
                 </div>
-              ))}
-            </div>
-          </Link>
+                <div className="flex w-60 justify-start">
+                  <p className="truncate group-hover:opacity-80">{conversation.messages?.[0]?.text}</p>
+                </div>
+              </div>
+              <div className="flex flex-shrink-0">
+                {conversation.users.map(({ user }) => (
+                  <div key={`${conversation.id}-${user.id}`} className="ml-[-24px]">
+                    <img
+                      className="h-12 w-12 rounded-full shadow-imageborder group-hover:opacity-80 group-hover:transition-opacity"
+                      src={user.image || undefined}
+                      alt={user.handle || undefined}
+                    />
+                  </div>
+                ))}
+              </div>
+            </Link>
+            <hr className="m-0 h-px border-0 bg-gray-200 p-0 dark:bg-gray-700" />
+          </div>
         ))}
       </div>
     </>

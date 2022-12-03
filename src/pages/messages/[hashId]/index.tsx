@@ -48,7 +48,6 @@ const Page: NextPage = () => {
   return (
     <>
       <SEO title="musker" description="A twitter clone" url="/messages" image="/og/musker.png" />
-
       <div className="my-2 mr-2 flex items-center justify-end">
         {users?.map(({ user }) => (
           <div key={user.id} className="ml-1">

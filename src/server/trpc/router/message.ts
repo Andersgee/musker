@@ -70,6 +70,12 @@ export const message = router({
           text: input.text,
         },
       });
+
+      await ctx.prisma.conversation.update({
+        where: { id: input.conversationId },
+        data: { lastActivityAt: message.createdAt },
+      });
+
       return message;
     }),
   conversations: protectedProcedure
@@ -103,7 +109,8 @@ export const message = router({
           },
         },
       });
-      return user?.conversations.map((c) => c.conversation);
+      const conversations = user?.conversations.map((c) => c.conversation) || [];
+      return conversations.sort((a, b) => b.lastActivityAt.getTime() - a.lastActivityAt.getTime());
     }),
   conversationMessages: protectedProcedure
     .input(
