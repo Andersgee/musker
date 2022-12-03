@@ -50,7 +50,12 @@ export function Profile({
           />
         </UserLink>
         {userId === session?.user?.id ? (
-          <Button onClick={() => dialogDispatch({ type: "show", name: "editprofile" })}>Edit profile</Button>
+          <button
+            className="w-30 rounded-full border border-neutral-500 bg-white px-3 py-2 font-semibold dark:bg-black"
+            onClick={() => dialogDispatch({ type: "show", name: "editprofile" })}
+          >
+            Edit profile
+          </button>
         ) : (
           <FollowButton userId={userId} />
         )}

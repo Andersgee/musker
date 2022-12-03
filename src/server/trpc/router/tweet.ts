@@ -5,7 +5,7 @@ export const tweet = router({
   create: protectedProcedure
     .input(
       z.object({
-        text: z.string(),
+        text: z.string().max(280),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -29,7 +29,7 @@ export const tweet = router({
     .input(
       z.object({
         tweetId: z.number(),
-        text: z.string(),
+        text: z.string().max(280),
       }),
     )
     .mutation(async ({ ctx, input }) => {

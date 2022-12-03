@@ -43,6 +43,7 @@ export function TweetCreate({ onClick, disabled, placeholder, className = "" }: 
         <div className="ml-1 flex-1">
           <div className="flex items-center">
             <textarea
+              spellCheck={false}
               className="h-20 w-full p-1"
               aria-label="compose"
               placeholder={placeholder}
