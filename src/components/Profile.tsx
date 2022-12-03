@@ -6,6 +6,7 @@ import { useDialogDispatch } from "src/context/DialogContext";
 
 import { IconDate } from "src/icons/Date";
 import { Button } from "src/ui/Button";
+import { hashidFromNumber } from "src/utils/hashids";
 import { trpc } from "src/utils/trpc";
 import { FollowButton } from "./FollowButton";
 
@@ -35,6 +36,17 @@ export function Profile({
   const { data: followCount } = trpc.profile.followCount.useQuery({ userId });
   const { data: session } = useSession();
   const dialogDispatch = useDialogDispatch();
+  const router = useRouter();
+
+  const { mutateAsync: createConversation, isLoading: createConverstaionIsLoading } =
+    trpc.message.createConversation.useMutation();
+
+  const onMessageClick = async () => {
+    try {
+      const conversation = await createConversation({ userId });
+      router.push(`/messages/${hashidFromNumber(conversation.id)}`);
+    } catch (error) {}
+  };
 
   if (!handle) {
     return null;
@@ -57,7 +69,16 @@ export function Profile({
             Edit profile
           </button>
         ) : (
-          <FollowButton userId={userId} />
+          <div className="flex gap-2">
+            <button
+              className="w-30 rounded-full border border-neutral-500 bg-white px-3 py-2 font-semibold dark:bg-black"
+              onClick={onMessageClick}
+              disabled={createConverstaionIsLoading}
+            >
+              Message
+            </button>
+            <FollowButton userId={userId} />
+          </div>
         )}
       </div>
       <h2>{handle}</h2>

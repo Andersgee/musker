@@ -1,13 +1,14 @@
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { UserImageLink } from "src/components/Link";
+import { UserImageLink, UserLink } from "src/components/Link";
 import { SEO } from "src/components/SEO";
 
 import { numberFromHashid } from "src/utils/hashids";
 import { trpc } from "src/utils/trpc";
 import { formatCreatedAt } from "src/utils/date";
 import { useState } from "react";
+import { IconAdd } from "src/icons/Add";
 
 const Page: NextPage = () => {
   const router = useRouter();
@@ -46,6 +47,17 @@ const Page: NextPage = () => {
   return (
     <>
       <SEO title="musker" description="A twitter clone" url="/messages" image="/og/musker.png" />
+
+      <div className="my-2 mr-2 flex items-center justify-end">
+        {conversation?.users.map(({ user }) => (
+          <div key={user.id} className="">
+            <UserImageLink handle={user.handle} image={user.image} />
+          </div>
+        ))}
+        <button className="h-12 w-12 rounded-full border border-neutral-500 bg-white dark:bg-black">
+          <IconAdd className="h-12 w-12 text-neutral-500 dark:text-neutral-400" />
+        </button>
+      </div>
       <div className="px-0 mainwidth sm:px-1">
         <textarea
           spellCheck={false}
@@ -56,7 +68,7 @@ const Page: NextPage = () => {
           onChange={(e) => setText(e.target.value)}
         />
       </div>
-      <div className="mt-1 flex justify-end">
+      <div className="mx-2 mt-1 flex justify-end">
         <button
           disabled={disabled || !text}
           className="rounded-full bg-sky-500 px-3 py-2 font-bold text-white disabled:bg-sky-300"
@@ -65,14 +77,16 @@ const Page: NextPage = () => {
           Send
         </button>
       </div>
-      <div className="flex flex-col">
+      <div className="mx-2 flex flex-col">
         {conversation?.messages.map((message) => {
           if (message.senderId === session.user?.id) {
             return (
               <div key={message.id}>
                 <div className="my-2 flex justify-end gap-2">
                   <div className="flex w-4/5 flex-col items-end">
-                    <pre className="mt-1 rounded-lg bg-blue-200 p-2 text-tweet">{message.text}</pre>
+                    <pre className="mt-1 rounded-lg bg-blue-200 p-2 text-black text-tweet dark:text-black">
+                      {message.text}
+                    </pre>
                     <div className="text-xs">{formatCreatedAt(message.createdAt)}</div>
                   </div>
                 </div>
@@ -83,7 +97,9 @@ const Page: NextPage = () => {
             <div key={message.id} className="my-2 flex w-4/5">
               <UserImageLink handle={message.sender.handle} image={message.sender.image} />
               <div className="mt-2 flex flex-col items-start">
-                <pre className="mt-1 rounded-lg bg-blue-200 p-2 text-tweet">{message.text}</pre>
+                <pre className="mt-1 rounded-lg bg-neutral-200 p-2 text-black text-tweet dark:bg-neutral-300 dark:text-black">
+                  {message.text}
+                </pre>
 
                 <div className="text-xs">{formatCreatedAt(message.createdAt)}</div>
               </div>

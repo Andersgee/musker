@@ -2,6 +2,32 @@ import { z } from "zod";
 import { router, protectedProcedure, publicProcedure } from "../trpc";
 
 export const message = router({
+  createConversation: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      //new conversation
+      const conversation = await ctx.prisma.conversation.create({ data: {} });
+      //add both users
+
+      const participant1 = ctx.prisma.usersConversationsPivot.create({
+        data: {
+          conversationId: conversation.id,
+          userId: ctx.session.user.id,
+        },
+      });
+      const participant2 = ctx.prisma.usersConversationsPivot.create({
+        data: {
+          conversationId: conversation.id,
+          userId: input.userId,
+        },
+      });
+      await Promise.all([participant1, participant2]);
+      return conversation;
+    }),
   create: protectedProcedure
     .input(
       z.object({
@@ -40,6 +66,10 @@ export const message = router({
                       user: true,
                     },
                   },
+                  messages: {
+                    orderBy: { id: "desc" },
+                    take: 1,
+                  },
                 },
               },
             },
@@ -68,6 +98,17 @@ export const message = router({
         select: {
           conversation: {
             include: {
+              users: {
+                select: {
+                  user: {
+                    select: {
+                      id: true,
+                      handle: true,
+                      image: true,
+                    },
+                  },
+                },
+              },
               messages: {
                 orderBy: {
                   id: "desc",
@@ -81,7 +122,6 @@ export const message = router({
                   },
                 },
               },
-              users: true,
             },
           },
         },
