@@ -9,25 +9,29 @@ import { trpc } from "src/utils/trpc";
 import { formatCreatedAt } from "src/utils/date";
 import { useState } from "react";
 import { IconAdd } from "src/icons/Add";
+import { useMessagesList } from "src/hooks/useInfiniteList";
 
 const Page: NextPage = () => {
   const router = useRouter();
   const { data: session } = useSession();
   const userExists = !!session?.user;
-  const conversationId = numberFromHashid(router.query.hashId as string);
+  const conversationId = numberFromHashid(router.query.hashId as string) as number;
   const utils = trpc.useContext();
 
-  const { data: conversation } = trpc.message.messages.useQuery(
+  const { messages, ref, isFetchingNextPage } = useMessagesList(
+    userExists && conversationId !== undefined,
+    conversationId,
+  );
+
+  const { data: users } = trpc.message.conversationUsers.useQuery(
     { conversationId },
     {
-      refetchInterval: 10000,
-      refetchIntervalInBackground: false,
       enabled: userExists && conversationId !== undefined,
     },
   );
 
   const { mutateAsync: create } = trpc.message.create.useMutation({
-    onSuccess: () => utils.message.messages.invalidate({ conversationId }),
+    onSuccess: () => utils.message.conversationMessages.invalidate({ conversationId }),
   });
 
   const [text, setText] = useState("");
@@ -40,7 +44,7 @@ const Page: NextPage = () => {
     }
   };
 
-  if (!userExists || !conversationId) {
+  if (!userExists || conversationId === undefined) {
     return <div></div>;
   }
 
@@ -49,7 +53,7 @@ const Page: NextPage = () => {
       <SEO title="musker" description="A twitter clone" url="/messages" image="/og/musker.png" />
 
       <div className="my-2 mr-2 flex items-center justify-end">
-        {conversation?.users.map(({ user }) => (
+        {users?.map(({ user }) => (
           <div key={user.id} className="">
             <UserImageLink handle={user.handle} image={user.image} />
           </div>
@@ -78,7 +82,7 @@ const Page: NextPage = () => {
         </button>
       </div>
       <div className="mx-2 flex flex-col">
-        {conversation?.messages.map((message) => {
+        {messages.map((message) => {
           if (message.senderId === session.user?.id) {
             return (
               <div key={message.id}>
@@ -106,6 +110,9 @@ const Page: NextPage = () => {
             </div>
           );
         })}
+      </div>
+      <div ref={ref} className="mt-4 flex justify-center">
+        {isFetchingNextPage ? "loading..." : "."}
       </div>
     </>
   );

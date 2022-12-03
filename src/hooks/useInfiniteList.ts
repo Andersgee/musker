@@ -240,3 +240,30 @@ export function useHomeList(enabled: boolean) {
 
   return { tweets, ref, isFetchingNextPage, hasNextPage };
 }
+
+/**
+ * `trpc.message.conversationMessages` for `/messages/[hashId]`
+ */
+export function useMessagesList(enabled: boolean, conversationId: number) {
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = trpc.message.conversationMessages.useInfiniteQuery(
+    { conversationId },
+    {
+      enabled: enabled,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+      refetchInterval: 10000,
+      refetchIntervalInBackground: false,
+    },
+  );
+  const messages = useMemo(() => {
+    return data?.pages.flatMap((page) => page.items || []) || [];
+  }, [data]);
+
+  const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
+    const isVisible = !!entry?.isIntersecting;
+    if (isVisible && hasNextPage !== false) {
+      fetchNextPage();
+    }
+  });
+
+  return { messages, ref, isFetchingNextPage, hasNextPage };
+}

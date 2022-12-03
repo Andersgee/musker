@@ -105,15 +105,15 @@ export const message = router({
       });
       return user?.conversations.map((c) => c.conversation);
     }),
-  messages: protectedProcedure
+  conversationMessages: protectedProcedure
     .input(
       z.object({
-        conversationId: z.number().nullish(),
+        conversationId: z.number(),
         cursor: z.number().nullish(),
       }),
     )
     .query(async ({ input, ctx }) => {
-      if (input.conversationId == null) return undefined;
+      const limit = 30;
 
       const usersConversationsPivot = await ctx.prisma.usersConversationsPivot.findUnique({
         where: {
@@ -124,22 +124,13 @@ export const message = router({
         },
         select: {
           conversation: {
-            include: {
-              users: {
-                select: {
-                  user: {
-                    select: {
-                      id: true,
-                      handle: true,
-                      image: true,
-                    },
-                  },
-                },
-              },
+            select: {
               messages: {
                 orderBy: {
                   id: "desc",
                 },
+                cursor: input.cursor ? { id: input.cursor } : undefined,
+                take: limit + 1,
                 include: {
                   sender: {
                     select: {
@@ -153,6 +144,51 @@ export const message = router({
           },
         },
       });
-      return usersConversationsPivot?.conversation;
+
+      const items = usersConversationsPivot?.conversation.messages || [];
+
+      let nextCursor: number | undefined = undefined;
+      if (items.length > limit) {
+        const nextItem = items.pop(); //dont return the one extra
+        nextCursor = nextItem?.id;
+      }
+      return { items, nextCursor };
+    }),
+
+  conversationUsers: protectedProcedure
+    .input(
+      z.object({
+        conversationId: z.number(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      const usersConversationsPivot = await ctx.prisma.usersConversationsPivot.findUnique({
+        where: {
+          userId_conversationId: {
+            userId: ctx.session.user.id,
+            conversationId: input.conversationId,
+          },
+        },
+        select: {
+          conversation: {
+            select: {
+              users: {
+                select: {
+                  user: {
+                    select: {
+                      id: true,
+                      handle: true,
+                      image: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const users = usersConversationsPivot?.conversation.users || [];
+      return users;
     }),
 });
