@@ -54,7 +54,7 @@ const Page: NextPage = () => {
             <UserImageLink handle={user.handle} image={user.image} />
           </div>
         ))}
-        <button className="h-12 w-12 rounded-full border border-neutral-500 bg-white dark:bg-black">
+        <button className="ml-1 h-12 w-12 rounded-full border border-neutral-500 bg-white dark:bg-black">
           <IconAdd className="h-12 w-12 text-neutral-500 dark:text-neutral-400" />
         </button>
       </div>

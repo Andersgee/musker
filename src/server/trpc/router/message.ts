@@ -2,6 +2,33 @@ import { z } from "zod";
 import { router, protectedProcedure, publicProcedure } from "../trpc";
 
 export const message = router({
+  inviteToConversation: protectedProcedure
+    .input(
+      z.object({
+        conversationId: z.number(),
+        userId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const pivot = ctx.prisma.usersConversationsPivot.findUnique({
+        where: {
+          userId_conversationId: {
+            conversationId: input.conversationId,
+            userId: ctx.session.user.id,
+          },
+        },
+      });
+      if (!pivot) return false;
+
+      const invited = await ctx.prisma.usersConversationsPivot.create({
+        data: {
+          conversationId: input.conversationId,
+          userId: input.userId,
+        },
+      });
+
+      return true;
+    }),
   createConversation: protectedProcedure
     .input(
       z.object({
