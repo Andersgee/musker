@@ -10,6 +10,7 @@ import { formatCreatedAt } from "src/utils/date";
 import { useState } from "react";
 import { IconAdd } from "src/icons/Add";
 import { useMessagesList } from "src/hooks/useInfiniteList";
+import { MessageCreate } from "src/components/MessageCreate";
 
 const Page: NextPage = () => {
   const router = useRouter();
@@ -34,13 +35,9 @@ const Page: NextPage = () => {
     onSuccess: () => utils.message.conversationMessages.invalidate({ conversationId }),
   });
 
-  const [text, setText] = useState("");
-  const disabled = false;
-
-  const handleClick = async () => {
+  const onClick = async (text: string) => {
     if (conversationId !== undefined && text.length < 280) {
       await create({ conversationId, text });
-      setText("");
     }
   };
 
@@ -54,7 +51,7 @@ const Page: NextPage = () => {
 
       <div className="my-2 mr-2 flex items-center justify-end">
         {users?.map(({ user }) => (
-          <div key={user.id} className="">
+          <div key={user.id} className="ml-1">
             <UserImageLink handle={user.handle} image={user.image} />
           </div>
         ))}
@@ -62,25 +59,7 @@ const Page: NextPage = () => {
           <IconAdd className="h-12 w-12 text-neutral-500 dark:text-neutral-400" />
         </button>
       </div>
-      <div className="px-0 mainwidth sm:px-1">
-        <textarea
-          spellCheck={false}
-          className="h-20 w-full p-2"
-          aria-label="compose"
-          placeholder="Your message"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-        />
-      </div>
-      <div className="mx-2 mt-1 flex justify-end">
-        <button
-          disabled={disabled || !text}
-          className="rounded-full bg-sky-500 px-3 py-2 font-bold text-white disabled:bg-sky-300"
-          onClick={handleClick}
-        >
-          Send
-        </button>
-      </div>
+      <MessageCreate disabled={false} placeholder="Your message" onClick={onClick} />
       <div className="mx-2 flex flex-col">
         {messages.map((message) => {
           if (message.senderId === session.user?.id) {
