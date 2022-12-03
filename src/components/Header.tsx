@@ -27,7 +27,7 @@ export function Header({ className = "" }: Props) {
   return (
     <Layout className={className}>
       <Link href={`/${as0}`}>
-        <h1>{as0}</h1>
+        <h1>{decodeURIComponent(as0 || "")}</h1>
       </Link>
     </Layout>
   );
