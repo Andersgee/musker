@@ -2,6 +2,7 @@
 //import { Stars } from "src/icons/Stars";
 //import { Pathname } from "./Pathname";
 
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { UserLink } from "./Link";
 import { NavFollows } from "./NavFollows";
@@ -14,6 +15,23 @@ export function Header({ className = "" }: Props) {
   const { asPath, pathname } = useRouter();
   const as = asPath.split("/").slice(1);
   const as0 = as.at(0);
+
+  if (as0 == "") {
+    return (
+      <Layout className={className}>
+        <h1>Latest Tweets</h1>
+      </Layout>
+    );
+  }
+
+  return (
+    <Layout className={className}>
+      <Link href={`/${as0}`}>
+        <h1>{as0}</h1>
+      </Link>
+    </Layout>
+  );
+  /*
   const as1 = as.at(1);
 
   const ps = pathname.split("/").slice(1);
@@ -56,6 +74,7 @@ export function Header({ className = "" }: Props) {
       <h1>{ps0}</h1>
     </Layout>
   );
+  */
 }
 
 //<h1 className="ml-4 font-medium capitalize">{isHome ? "Latest Tweets" : asPath.slice(1)}</h1>
