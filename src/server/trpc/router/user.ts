@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { router, protectedProcedure, publicProcedure } from "../trpc";
+import { router, protectedProcedure } from "../trpc";
 
 export const user = router({
   isFollowing: protectedProcedure

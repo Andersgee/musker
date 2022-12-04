@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import { useDialogDispatch } from "src/context/DialogContext";
 
 import { IconDate } from "src/icons/Date";
-import { Button } from "src/ui/Button";
 import { hashidFromNumber } from "src/utils/hashids";
 import { trpc } from "src/utils/trpc";
 import { FollowButton } from "./FollowButton";
@@ -39,7 +38,7 @@ export function Profile({
   const router = useRouter();
 
   const { mutateAsync: createConversation, isLoading: createConverstaionIsLoading } =
-    trpc.message.createConversation.useMutation();
+    trpc.conversation.createConversation.useMutation();
 
   const onMessageClick = async () => {
     try {

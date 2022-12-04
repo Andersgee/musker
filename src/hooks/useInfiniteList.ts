@@ -200,21 +200,6 @@ export function useTweetRepliesList(enabled: boolean, tweetId: number) {
 }
 
 /**
- * `trpc.home.tweetsOld` for `/`
- */
-export function useHomeListOld(enabled: boolean) {
-  const { data, isLoading } = trpc.home.tweetsOld.useQuery(
-    {},
-    {
-      enabled: enabled,
-    },
-  );
-  const tweets = useMemo(() => data || [], [data]);
-
-  return { tweets, isLoading };
-}
-
-/**
  * `trpc.home.tweets` for `/`
  */
 export function useHomeList(enabled: boolean) {
@@ -266,4 +251,24 @@ export function useMessagesList(enabled: boolean, conversationId: number) {
   });
 
   return { messages, ref, isFetchingNextPage, hasNextPage };
+}
+
+export function useConversationMyInvitableUsersList(enabled: boolean, conversationId: number) {
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = trpc.conversation.myInvitableUsers.useInfiniteQuery(
+    { conversationId },
+    {
+      enabled: enabled,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    },
+  );
+
+  const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
+    const isVisible = !!entry?.isIntersecting;
+    if (isVisible && hasNextPage !== false) {
+      fetchNextPage();
+    }
+  });
+
+  const users = useMemo(() => data?.pages.map((page) => page.items).flat() || [], [data]);
+  return { users, ref, isFetchingNextPage, hasNextPage };
 }

@@ -3,6 +3,54 @@ import { router, publicProcedure, protectedProcedure } from "../trpc";
 //import { type Prisma } from "@prisma/client";
 
 export const follows = router({
+  mySentFollows: protectedProcedure
+    .input(
+      z.object({
+        cursor: z.string().nullish(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const sessionUserId = ctx.session.user.id;
+      const limit = 10;
+
+      const user = await ctx.prisma.user.findUnique({
+        where: {
+          id: sessionUserId,
+        },
+        select: {
+          sentFollows: {
+            take: limit + 1,
+            cursor: input.cursor
+              ? {
+                  userId_followerId: {
+                    userId: input.cursor,
+                    followerId: sessionUserId,
+                  },
+                }
+              : undefined,
+            select: {
+              user: {
+                select: {
+                  id: true,
+                  handle: true,
+                  image: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const items = user?.sentFollows || [];
+
+      let nextCursor: string | undefined = undefined;
+
+      if (items.length > limit) {
+        const nextItem = items.pop(); //dont return the one extra
+        nextCursor = nextItem?.user?.id;
+      }
+      return { items, nextCursor };
+    }),
   followers: publicProcedure
     .input(
       z.object({
@@ -47,7 +95,6 @@ export const follows = router({
       }
       return { items, nextCursor };
     }),
-
   following: publicProcedure
     .input(
       z.object({

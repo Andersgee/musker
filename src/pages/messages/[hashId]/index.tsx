@@ -1,16 +1,17 @@
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { UserImageLink, UserLink } from "src/components/Link";
+import { UserImageLink } from "src/components/Link";
 import { SEO } from "src/components/SEO";
 
 import { numberFromHashid } from "src/utils/hashids";
 import { trpc } from "src/utils/trpc";
 import { formatCreatedAt } from "src/utils/date";
-import { useState } from "react";
 import { IconAdd } from "src/icons/Add";
 import { useMessagesList } from "src/hooks/useInfiniteList";
 import { MessageCreate } from "src/components/MessageCreate";
+import { InviteToConversationDialog } from "src/components/InviteToConversation";
+import { useDialogDispatch } from "src/context/DialogContext";
 
 const Page: NextPage = () => {
   const router = useRouter();
@@ -18,6 +19,7 @@ const Page: NextPage = () => {
   const userExists = !!session?.user;
   const conversationId = numberFromHashid(router.query.hashId as string) as number;
   const utils = trpc.useContext();
+  const dialogDispatch = useDialogDispatch();
 
   const { messages, ref, isFetchingNextPage } = useMessagesList(
     userExists && conversationId !== undefined,
@@ -48,13 +50,17 @@ const Page: NextPage = () => {
   return (
     <>
       <SEO title="musker" description="A twitter clone" url="/messages" image="/og/musker.png" />
+      <InviteToConversationDialog conversationId={conversationId} />
       <div className="my-2 mr-2 flex items-center justify-end">
         {users?.map(({ user }) => (
           <div key={user.id} className="ml-1">
             <UserImageLink handle={user.handle} image={user.image} />
           </div>
         ))}
-        <button className="ml-1 h-12 w-12 rounded-full border border-neutral-500 bg-white dark:bg-black">
+        <button
+          className="ml-1 h-12 w-12 rounded-full border border-neutral-500 bg-white dark:bg-black"
+          onClick={() => dialogDispatch({ type: "show", name: "inviteToConversation" })}
+        >
           <IconAdd className="h-12 w-12 text-neutral-500 dark:text-neutral-400" />
         </button>
       </div>

@@ -1,60 +1,7 @@
 import { z } from "zod";
-import { router, protectedProcedure, publicProcedure } from "../trpc";
+import { router, protectedProcedure } from "../trpc";
 
 export const message = router({
-  inviteToConversation: protectedProcedure
-    .input(
-      z.object({
-        conversationId: z.number(),
-        userId: z.string(),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      const pivot = ctx.prisma.usersConversationsPivot.findUnique({
-        where: {
-          userId_conversationId: {
-            conversationId: input.conversationId,
-            userId: ctx.session.user.id,
-          },
-        },
-      });
-      if (!pivot) return false;
-
-      const invited = await ctx.prisma.usersConversationsPivot.create({
-        data: {
-          conversationId: input.conversationId,
-          userId: input.userId,
-        },
-      });
-
-      return true;
-    }),
-  createConversation: protectedProcedure
-    .input(
-      z.object({
-        userId: z.string(),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      //new conversation
-      const conversation = await ctx.prisma.conversation.create({ data: {} });
-      //add both users
-
-      const participant1 = ctx.prisma.usersConversationsPivot.create({
-        data: {
-          conversationId: conversation.id,
-          userId: ctx.session.user.id,
-        },
-      });
-      const participant2 = ctx.prisma.usersConversationsPivot.create({
-        data: {
-          conversationId: conversation.id,
-          userId: input.userId,
-        },
-      });
-      await Promise.all([participant1, participant2]);
-      return conversation;
-    }),
   create: protectedProcedure
     .input(
       z.object({
@@ -85,6 +32,7 @@ export const message = router({
       }),
     )
     .query(async ({ input, ctx }) => {
+      //TODO, this should use cursor and infinite query.
       const user = await ctx.prisma.user.findUnique({
         where: {
           id: ctx.session.user.id,

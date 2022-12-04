@@ -2,13 +2,12 @@ import { useState } from "react";
 import useEventListener from "src/hooks/useEventListener";
 
 type Props = {
-  className?: string;
   onClick: (text: string) => Promise<void>;
   disabled: boolean;
   placeholder: string;
 };
 
-export function MessageCreate({ onClick, disabled, placeholder, className = "" }: Props) {
+export function MessageCreate({ onClick, disabled, placeholder }: Props) {
   const [text, setText] = useState("");
 
   const handleClick = async () => {

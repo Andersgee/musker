@@ -7,6 +7,7 @@ import { profile } from "./profile";
 import { follows } from "./follows";
 import { home } from "./home";
 import { message } from "./message";
+import { conversation } from "./conversation";
 
 export const appRouter = router({
   handle,
@@ -17,6 +18,7 @@ export const appRouter = router({
   follows,
   home,
   message,
+  conversation,
 });
 
 // export type definition of API

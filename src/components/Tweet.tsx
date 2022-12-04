@@ -153,27 +153,6 @@ function useTweetActions(enabled: boolean, tweetId: number) {
   return { hasLiked, hasRetweeted, like, unlike, retweet, unretweet };
 }
 
-type RepliedToProps = {
-  repliedToTweetId: number | null;
-  handle: string | null;
-  className?: string;
-};
-
-function RepliedToInfo({ handle, repliedToTweetId, className = "" }: RepliedToProps) {
-  if (!repliedToTweetId) {
-    return null;
-  }
-
-  return (
-    <div className={`font-paragraph flex text-sm ${className}`}>
-      <div className="flex w-12 justify-end">
-        <IconReply className="mr-2 w-4" />
-      </div>
-      <div>replied</div>
-    </div>
-  );
-}
-
 type RetweetedByProps = {
   handle?: string | null;
   className?: string;

@@ -15,6 +15,7 @@ const initialState = {
   editprofile: false,
   confirm: false,
   warning: false,
+  inviteToConversation: false,
 };
 
 const DialogContext = createContext<Dialogs>(initialState);
@@ -31,7 +32,8 @@ export function DialogProvider({ children }: { children: React.ReactNode }) {
 }
 
 type Type = "show" | "hide" | "toggle";
-type Name = "signin" | "editprofile" | "confirm" | "warning";
+//type Name = "signin" | "editprofile" | "confirm" | "warning"
+type Name = keyof typeof initialState;
 
 type Dialogs = typeof initialState;
 type Action = { type: Type; name: Name };
