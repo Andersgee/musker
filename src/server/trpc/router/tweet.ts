@@ -2,6 +2,26 @@ import { z } from "zod";
 import { router, protectedProcedure, publicProcedure } from "../trpc";
 
 export const tweet = router({
+  actionCounts: protectedProcedure
+    .input(
+      z.object({
+        tweetId: z.number(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const tweet = await ctx.prisma.tweet.findUnique({
+        where: {
+          id: input.tweetId,
+        },
+        select: {
+          repliesCount: true,
+          retweetsCount: true,
+          likesCount: true,
+        },
+      });
+      return tweet;
+    }),
+
   create: protectedProcedure
     .input(
       z.object({

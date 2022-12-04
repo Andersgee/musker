@@ -1,7 +1,6 @@
 import { formatCreatedAt } from "src/utils/date";
 import { TweetLink, UserImageLink, UserLink } from "./Link";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
 import { useDialogDispatch } from "src/context/DialogContext";
 import { IconHeart } from "src/icons/Heart";
 import { IconReply } from "src/icons/Reply";
@@ -72,38 +71,24 @@ type ActionsProps = {
 };
 
 export function Actions({ userHandle, tweetId, replies, retweets, likes, className = "" }: ActionsProps) {
-  const replyCount = replies;
-  const [retweetCount, setRetweetCount] = useState(retweets);
-  const [likeCount, setLikeCount] = useState(likes);
-
   const dialogDispatch = useDialogDispatch();
   const { data: session } = useSession();
   const userExists = !!session?.user;
 
-  const { data: hasLiked } = trpc.tweet.hasLiked.useQuery({ tweetId }, { enabled: userExists });
-  const { mutateAsync: like } = trpc.tweet.like.useMutation();
-  const { mutateAsync: unlike } = trpc.tweet.unlike.useMutation();
+  const { data: tweetCounts } = trpc.tweet.actionCounts.useQuery({ tweetId });
 
-  const { data: hasRetweeted } = trpc.tweet.hasRetweeted.useQuery({ tweetId }, { enabled: userExists });
-  const { mutateAsync: retweet } = trpc.tweet.retweet.useMutation();
-  const { mutateAsync: unretweet } = trpc.tweet.unretweet.useMutation();
-
-  const utils = trpc.useContext();
+  const { like, unlike, retweet, unretweet, hasLiked, hasRetweeted } = useTweetActions(userExists, tweetId);
 
   const handleLikeClick = async () => {
     if (!userExists) {
       dialogDispatch({ type: "show", name: "signin" });
       return;
     }
-
     if (hasLiked) {
-      await unlike({ tweetId });
-      setLikeCount((prev) => prev - 1);
+      unlike({ tweetId });
     } else {
-      await like({ tweetId });
-      setLikeCount((prev) => prev + 1);
+      like({ tweetId });
     }
-    utils.tweet.hasLiked.invalidate({ tweetId });
   };
 
   const handleRetweetClick = async () => {
@@ -111,32 +96,61 @@ export function Actions({ userHandle, tweetId, replies, retweets, likes, classNa
       dialogDispatch({ type: "show", name: "signin" });
       return;
     }
-
     if (hasRetweeted) {
-      await unretweet({ tweetId });
-      setRetweetCount((prev) => prev - 1);
+      unretweet({ tweetId });
     } else {
-      await retweet({ tweetId });
-      setRetweetCount((prev) => prev + 1);
+      retweet({ tweetId });
     }
-    utils.tweet.hasRetweeted.invalidate({ tweetId });
   };
 
   return (
     <div className={`ml-2 flex w-full gap-4 ${className}`}>
       <TweetLink userHandle={userHandle} tweetId={tweetId} className="group flex w-20 pt-1">
-        <IconReply className="mr-2 h-6 w-6 group-hover:text-blue-500" /> {replyCount}
+        <IconReply className="mr-2 h-6 w-6 group-hover:text-blue-500" /> {tweetCounts?.repliesCount ?? replies}
       </TweetLink>
       <button className="group flex w-20" title="Retweet" onClick={handleRetweetClick}>
         <IconRewteet className={`mr-2 h-6 w-6 ${hasRetweeted ? "text-green-600" : "group-hover:text-green-300"}`} />
-        {retweetCount}
+        {tweetCounts?.retweetsCount ?? retweets}
       </button>
       <button className="group flex w-20" title="Like" onClick={handleLikeClick}>
         <IconHeart className={`mr-2 h-6 w-6 ${hasLiked ? "text-pink-600" : "group-hover:text-pink-300"}`} />
-        {likeCount}
+        {tweetCounts?.likesCount ?? likes}
       </button>
     </div>
   );
+}
+
+function useTweetActions(enabled: boolean, tweetId: number) {
+  const utils = trpc.useContext();
+  const { data: hasLiked } = trpc.tweet.hasLiked.useQuery({ tweetId }, { enabled: enabled });
+  const { mutateAsync: like } = trpc.tweet.like.useMutation({
+    onSuccess: () => {
+      utils.tweet.actionCounts.invalidate({ tweetId });
+      utils.tweet.hasLiked.invalidate({ tweetId });
+    },
+  });
+  const { mutateAsync: unlike } = trpc.tweet.unlike.useMutation({
+    onSuccess: () => {
+      utils.tweet.actionCounts.invalidate({ tweetId });
+      utils.tweet.hasLiked.invalidate({ tweetId });
+    },
+  });
+
+  const { data: hasRetweeted } = trpc.tweet.hasRetweeted.useQuery({ tweetId }, { enabled: enabled });
+  const { mutateAsync: retweet } = trpc.tweet.retweet.useMutation({
+    onSuccess: () => {
+      utils.tweet.actionCounts.invalidate({ tweetId });
+      utils.tweet.hasRetweeted.invalidate({ tweetId });
+    },
+  });
+  const { mutateAsync: unretweet } = trpc.tweet.unretweet.useMutation({
+    onSuccess: () => {
+      utils.tweet.actionCounts.invalidate({ tweetId });
+      utils.tweet.hasRetweeted.invalidate({ tweetId });
+    },
+  });
+
+  return { hasLiked, hasRetweeted, like, unlike, retweet, unretweet };
 }
 
 type RepliedToProps = {
