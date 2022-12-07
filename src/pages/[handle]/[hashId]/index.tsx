@@ -12,13 +12,14 @@ import { trpc } from "src/utils/trpc";
 type Tweet = NonNullable<inferAsyncReturnType<typeof getTweetByHashId>>;
 
 type Props = {
+  pageTweet: Tweet;
   user: NonNullable<inferAsyncReturnType<typeof getUserByHandle>>;
   tweets: Tweet[];
   tweetId: number;
   hashId: string;
 };
 
-const Page: NextPage<Props> = ({ user, tweets, tweetId, hashId }) => {
+const Page: NextPage<Props> = ({ pageTweet, user, tweets, tweetId, hashId }) => {
   const router = useRouter();
   const utils = trpc.useContext();
 
@@ -43,9 +44,9 @@ const Page: NextPage<Props> = ({ user, tweets, tweetId, hashId }) => {
     <>
       <SEO
         title={`Tweet / musker`}
-        description={tweets.at(-1)?.text}
+        description={`${user.handle} - ${pageTweet.text}`}
         url={`/${user.handle}/${hashId}`}
-        image={`/api//og/tweet?hashId=${hashId}`}
+        image={`/api/og/tweet?hashId=${hashId}`}
       />
       <div>
         {tweets.map((tweet, i) => {
@@ -60,7 +61,7 @@ const Page: NextPage<Props> = ({ user, tweets, tweetId, hashId }) => {
               replies={tweet.repliesCount}
               retweets={tweet.retweetsCount}
               likes={tweet.likesCount}
-              drawReplyLine={i !== tweets.length - 1}
+              drawReplyLine={tweet.id !== pageTweet.id}
             />
           );
         })}
@@ -121,7 +122,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       }
     }
 
-    const props: Props = { user, tweetId: tweet.id, tweets: tweets.reverse(), hashId };
+    const props: Props = { pageTweet: tweet, user, tweetId: tweet.id, tweets: tweets.reverse(), hashId };
     return {
       props,
       revalidate: 60,
