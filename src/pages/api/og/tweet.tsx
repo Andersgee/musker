@@ -104,7 +104,7 @@ export default async function handler(req: NextRequest) {
               </h2>
               <p tw="text-left  font-bold p-0 m-0 mt-1 text-lg text-neutral-300">{tweet.text}</p>
 
-              <div tw="flex mt-4 justify-between w-[300px] mb-0 pb-0">
+              <div tw="flex mt-4 justify-between w-[150px] mb-0 pb-0">
                 <svg
                   fill="none"
                   strokeWidth="20"
