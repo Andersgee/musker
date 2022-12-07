@@ -43,9 +43,9 @@ const Page: NextPage<Props> = ({ user, tweets, tweetId, hashId }) => {
     <>
       <SEO
         title={`Tweet / musker`}
-        description="A twitter clone"
+        description={tweets.at(-1)?.text}
         url={`/${user.handle}/${hashId}`}
-        image={`/og/tweet?hashId=${hashId}`}
+        image={`/api//og/tweet?hashId=${hashId}`}
       />
       <div>
         {tweets.map((tweet, i) => {
