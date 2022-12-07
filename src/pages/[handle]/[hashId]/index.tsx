@@ -45,7 +45,7 @@ const Page: NextPage<Props> = ({ user, tweets, tweetId, hashId }) => {
         title={`Tweet / musker`}
         description="A twitter clone"
         url={`/${user.handle}/${hashId}`}
-        image="/og/musker.png"
+        image={`/og/tweet?hashId=${hashId}`}
       />
       <div>
         {tweets.map((tweet, i) => {
