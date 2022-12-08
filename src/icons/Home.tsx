@@ -3,11 +3,10 @@ import type { IconProps } from ".";
 export function IconHome({ className, width = 24, height = 24, ...rest }: IconProps) {
   return (
     <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 240 240"
       fill="none"
       strokeWidth="20"
-      stroke="currentColor"
-      viewBox="0 0 240 240"
-      xmlns="http://www.w3.org/2000/svg"
       width={width}
       height={height}
       {...rest}
