@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { tweetpath, userpath } from "src/utils/url";
+import Image from "next/image";
 
 type UserLinkProps = {
   userHandle: string | null;
@@ -37,10 +38,12 @@ type UserImageLinkProps = {
 export function UserImageLink({ handle, image }: UserImageLinkProps) {
   return (
     <UserLink userHandle={handle} className="group mt-2 h-12 w-12 flex-shrink-0">
-      <img
+      <Image
         className="h-12 w-12 rounded-full shadow-imageborder group-hover:opacity-80 group-hover:transition-opacity"
-        src={image || undefined}
-        alt={handle || undefined}
+        src={image || ""}
+        alt={handle || ""}
+        width={48}
+        height={48}
       />
     </UserLink>
   );

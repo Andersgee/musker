@@ -1,7 +1,7 @@
 import { type NextPage } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { SEO } from "src/components/SEO";
-
 import { IconMusker } from "src/icons/Musker";
 import { hashidFromNumber } from "src/utils/hashids";
 import { trpc } from "src/utils/trpc";
@@ -35,10 +35,12 @@ const Page: NextPage = () => {
               <div className="flex flex-shrink-0">
                 {conversation.users.map(({ user }) => (
                   <div key={`${conversation.id}-${user.id}`} className="ml-[-24px]">
-                    <img
+                    <Image
                       className="h-12 w-12 rounded-full shadow-imageborder group-hover:opacity-80 group-hover:transition-opacity"
-                      src={user.image || undefined}
-                      alt={user.handle || undefined}
+                      src={user.image || ""}
+                      alt={user.handle || ""}
+                      width={48}
+                      height={48}
                     />
                   </div>
                 ))}

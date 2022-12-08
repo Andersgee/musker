@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useDialogDispatch } from "src/context/DialogContext";
 import { trpc } from "src/utils/trpc";
 import { UserLink } from "./Link";
+import Image from "next/image";
 import { UserHandleChoose } from "./UserHandleChoose";
 
 type Props = {
@@ -80,7 +81,13 @@ function UserImage({ image, handle }: { image: string | null | undefined; handle
   if (image && handle) {
     return (
       <UserLink userHandle={handle} className="w-12">
-        <img className="h-12 w-12 rounded-full shadow-imageborder" src={image} alt={handle} />
+        <Image
+          className="h-12 w-12 rounded-full shadow-imageborder"
+          src={image || ""}
+          alt={handle || ""}
+          width={48}
+          height={48}
+        />
       </UserLink>
     );
   }

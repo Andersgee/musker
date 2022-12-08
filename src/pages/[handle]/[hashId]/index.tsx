@@ -49,7 +49,7 @@ const Page: NextPage<Props> = ({ pageTweet, user, tweets, tweetId, hashId }) => 
         image={`/api/og/tweet?hashId=${hashId}`}
       />
       <div>
-        {tweets.map((tweet, i) => {
+        {tweets.map((tweet) => {
           return (
             <Tweet
               key={tweet.id}

@@ -6,6 +6,7 @@ import { useConversationMyInvitableUsersList } from "src/hooks/useInfiniteList";
 import { useOnClickOutside } from "src/hooks/useOnClickOutside";
 import { IconAdd } from "src/icons/Add";
 import { trpc } from "src/utils/trpc";
+import Image from "next/image";
 
 type Props = {
   conversationId: number;
@@ -72,10 +73,12 @@ export function InviteToConversationDialog({ conversationId }: Props) {
             <div key={user.id}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <img
+                  <Image
                     className="h-12 w-12 rounded-full shadow-imageborder"
-                    src={user.image || undefined}
-                    alt={user.handle || undefined}
+                    src={user.image || ""}
+                    alt={user.handle || ""}
+                    width={48}
+                    height={48}
                   />
                   <h3 className="ml-2">{user.handle}</h3>
                 </div>

@@ -1,14 +1,13 @@
 import { format } from "date-fns";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { useDialogDispatch } from "src/context/DialogContext";
-
 import { IconDate } from "src/icons/Date";
 import { hashidFromNumber } from "src/utils/hashids";
 import { trpc } from "src/utils/trpc";
 import { FollowButton } from "./FollowButton";
-
 import { UserLink } from "./Link";
 
 type Props = {
@@ -54,10 +53,12 @@ export function Profile({
     <div className={`mx-2 ${className}`}>
       <div className="flex items-baseline justify-between">
         <UserLink className="h-28 w-28" userHandle={handle}>
-          <img
+          <Image
             className="h-28 w-28 rounded-full shadow-imageborder"
-            src={image || undefined}
-            alt={handle || undefined}
+            src={image || ""}
+            alt={handle || ""}
+            width={48}
+            height={48}
           />
         </UserLink>
         {userId === session?.user?.id ? (

@@ -51,7 +51,7 @@ function HomeList() {
         <div>
           <IconMusker className="h-auto w-full" />
           <div className="text-center">
-            <h3>Go follow some people to make this feed peronal.</h3>
+            <h2>Go follow some people to make this feed peronal.</h2>
             <p>(Until then showing general explore feed here)</p>
           </div>
           <div className="flex justify-center">
@@ -98,10 +98,10 @@ function HomeUnAuthenticated() {
     <div>
       <div className="mb-12 flex flex-col items-center gap-2 text-center">
         <IconMusker className="h-auto w-full" />
-        <h3>You are not signed in</h3>
+        <h2>You are not signed in</h2>
         <p>showing you explore feed instead of your personal feed</p>
-        <Button className="block w-32" onClick={() => dialogDispatch({ type: "show", name: "signin" })}>
-          sign in
+        <Button className="block w-32 text-lg" onClick={() => dialogDispatch({ type: "show", name: "signin" })}>
+          Sign in
         </Button>
       </div>
       <hr className="h-px border-0 bg-gray-200 dark:bg-gray-700" />

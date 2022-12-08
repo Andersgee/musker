@@ -49,7 +49,11 @@ export function Nav({ className = "" }: Props) {
 
 function NavLink({ href, label, children }: { href: string; label: string; children: React.ReactNode }) {
   return (
-    <Link href={href} className="group flex h-12 items-center justify-center 3xl:justify-start 3xl:pl-8">
+    <Link
+      href={href}
+      aria-label={label}
+      className="group flex h-12 items-center justify-center 3xl:justify-start 3xl:pl-8"
+    >
       {children}
       <span className="ml-4 hidden 3xl:block">{label}</span>
     </Link>

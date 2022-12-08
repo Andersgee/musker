@@ -1,5 +1,6 @@
 import { FollowButton } from "src/components/FollowButton";
 import { UserLink } from "./Link";
+import Image from "next/image";
 
 type Props = {
   userId: string;
@@ -13,10 +14,12 @@ export function UserRow({ userId, image, handle, className = "" }: Props) {
     <>
       <div className={`my-4 mx-2 flex ${className}`}>
         <UserLink userHandle={handle} className="group flex h-12 w-12 flex-1 items-center">
-          <img
+          <Image
             className="h-12 w-12 rounded-full shadow-imageborder group-hover:opacity-80 group-hover:transition-opacity"
-            src={image || undefined}
-            alt={handle || undefined}
+            src={image || ""}
+            alt={handle || ""}
+            width={48}
+            height={48}
           />
           <h3 className="ml-2 group-hover:opacity-80">{handle}</h3>
         </UserLink>
