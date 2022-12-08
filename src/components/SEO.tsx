@@ -104,6 +104,7 @@ export function SEO({
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       {/* adress bar color, same as bgcolor looks good. */}
       <meta name="theme-color" content="#FAFAFA" />
+      <meta name="description" content={description} />
       {/* manifest and icons */}
       {/*<link rel="manifest" href={absUrl("/manifest.json")} />*/}
       <link rel="manifest" href="/manifest.json" />

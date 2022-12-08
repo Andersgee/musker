@@ -105,14 +105,14 @@ export function Actions({ userHandle, tweetId, replies, retweets, likes, classNa
 
   return (
     <div className={`ml-2 flex w-full gap-4 ${className}`}>
-      <TweetLink userHandle={userHandle} tweetId={tweetId} className="group flex w-20 pt-1">
+      <TweetLink userHandle={userHandle} tweetId={tweetId} className="group flex h-12 w-20 items-center pt-1">
         <IconReply className="mr-2 h-6 w-6 group-hover:text-blue-500" /> {tweetCounts?.repliesCount ?? replies}
       </TweetLink>
-      <button className="group flex w-20" title="Retweet" onClick={handleRetweetClick}>
+      <button className="group flex h-12 w-20 items-center" title="Retweet" onClick={handleRetweetClick}>
         <IconRewteet className={`mr-2 h-6 w-6 ${hasRetweeted ? "text-green-600" : "group-hover:text-green-300"}`} />
         {tweetCounts?.retweetsCount ?? retweets}
       </button>
-      <button className="group flex w-20" title="Like" onClick={handleLikeClick}>
+      <button className="group flex h-12 w-20 items-center" title="Like" onClick={handleLikeClick}>
         <IconHeart className={`mr-2 h-6 w-6 ${hasLiked ? "text-pink-600" : "group-hover:text-pink-300"}`} />
         {tweetCounts?.likesCount ?? likes}
       </button>
