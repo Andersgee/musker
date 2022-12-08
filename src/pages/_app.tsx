@@ -27,10 +27,7 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
             <SignInDialog />
             <EditProfileDialog />
             <div
-              className={`${montserrat.className}
-              container grid 
-              grid-cols-phone grid-rows-phone
-              sm:grid-cols-sm sm:grid-rows-sm md:grid-cols-md lg:grid-cols-lg xl:grid-cols-xl 2xl:grid-cols-2xl 3xl:grid-cols-3xl`}
+              className={`container grid grid-cols-phone grid-rows-phone sm:grid-cols-sm sm:grid-rows-sm md:grid-cols-md lg:grid-cols-lg xl:grid-cols-xl 2xl:grid-cols-2xl 3xl:grid-cols-3xl ${montserrat.className}`}
             >
               <Nav className="fixed bottom-0 h-12 w-full border-t sm:h-full sm:w-16 sm:border-t-0 md:w-20 3xl:w-72" />
               <Header className="fixed h-12 mainwidth sm:ml-16 md:ml-20 3xl:ml-72" />
