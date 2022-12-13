@@ -102,7 +102,7 @@ export default async function handler(req: NextRequest) {
               <h2 tw="flex text-white text-lg m-0">
                 {author.handle} - {createdAt}
               </h2>
-              <p tw="text-left  font-bold p-0 m-0 mt-1 text-lg text-neutral-300">{tweet.text}</p>
+              <pre tw="text-left font-bold p-0 m-0 mt-1 text-lg text-neutral-300">{tweet.text}</pre>
 
               <div tw="flex mt-4 justify-between w-[150px] mb-0 pb-0">
                 <svg
