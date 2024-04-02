@@ -17,7 +17,7 @@ import { useCallback } from "react";
  * });
  * ```
  */
-export function UseIntersectionObserverCallback<T extends Element>(
+export function useIntersectionObserver<T extends Element>(
   callback: IntersectionObserverCallback,
   options?: IntersectionObserverInit,
 ) {
