@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { trpc } from "src/utils/trpc";
-import { UseIntersectionObserverCallback } from "./useIntersectionObserverCallback";
+import { useIntersectionObserver } from "./useIntersectionObserver";
 
 //lets put these snippets, which occur all over the place with slight variations, in one place
 
@@ -16,7 +16,7 @@ export function useFollowingList(enabled: boolean, userId: string) {
     },
   );
 
-  const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
+  const ref = useIntersectionObserver<HTMLDivElement>(([entry]) => {
     const isVisible = !!entry?.isIntersecting;
     if (isVisible && hasNextPage !== false) {
       fetchNextPage();
@@ -39,7 +39,7 @@ export function useFollowersList(enabled: boolean, userId: string) {
     },
   );
 
-  const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
+  const ref = useIntersectionObserver<HTMLDivElement>(([entry]) => {
     const isVisible = !!entry?.isIntersecting;
     if (isVisible && hasNextPage !== false) {
       fetchNextPage();
@@ -62,7 +62,7 @@ export function useKnownFollowersList(enabled: boolean, userId: string) {
     },
   );
 
-  const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
+  const ref = useIntersectionObserver<HTMLDivElement>(([entry]) => {
     const isVisible = !!entry?.isIntersecting;
     if (isVisible && hasNextPage !== false) {
       fetchNextPage();
@@ -85,7 +85,7 @@ export function useExploreList() {
   );
   const tweets = useMemo(() => data?.pages.map((page) => page.items).flat() || [], [data]);
 
-  const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
+  const ref = useIntersectionObserver<HTMLDivElement>(([entry]) => {
     const isVisible = !!entry?.isIntersecting;
     if (isVisible && hasNextPage !== false) {
       fetchNextPage();
@@ -114,7 +114,7 @@ export function useProfileTweetsWithRepliesList(enabled: boolean, userId: string
     return all;
   }, [data]);
 
-  const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
+  const ref = useIntersectionObserver<HTMLDivElement>(([entry]) => {
     const isVisible = !!entry?.isIntersecting;
     if (isVisible && hasNextPage !== false) {
       fetchNextPage();
@@ -143,7 +143,7 @@ export function useProfileTweetsList(enabled: boolean, userId: string) {
     return all;
   }, [data]);
 
-  const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
+  const ref = useIntersectionObserver<HTMLDivElement>(([entry]) => {
     const isVisible = !!entry?.isIntersecting;
     if (isVisible && hasNextPage !== false) {
       fetchNextPage();
@@ -165,7 +165,7 @@ export function useProfileLikesList(enabled: boolean, userId: string) {
     },
   );
 
-  const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
+  const ref = useIntersectionObserver<HTMLDivElement>(([entry]) => {
     const isVisible = !!entry?.isIntersecting;
     if (isVisible && hasNextPage !== false) {
       fetchNextPage();
@@ -189,7 +189,7 @@ export function useTweetRepliesList(enabled: boolean, tweetId: number) {
   );
   const replies = useMemo(() => data?.pages.map((page) => page.items).flat() || [], [data]);
 
-  const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
+  const ref = useIntersectionObserver<HTMLDivElement>(([entry]) => {
     const isVisible = !!entry?.isIntersecting;
     if (isVisible && hasNextPage !== false) {
       fetchNextPage();
@@ -216,7 +216,7 @@ export function useHomeList(enabled: boolean) {
     //return list?.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()) || [];
   }, [data]);
 
-  const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
+  const ref = useIntersectionObserver<HTMLDivElement>(([entry]) => {
     const isVisible = !!entry?.isIntersecting;
     if (isVisible && hasNextPage !== false) {
       fetchNextPage();
@@ -243,7 +243,7 @@ export function useMessagesList(enabled: boolean, conversationId: number) {
     return data?.pages.flatMap((page) => page.items || []) || [];
   }, [data]);
 
-  const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
+  const ref = useIntersectionObserver<HTMLDivElement>(([entry]) => {
     const isVisible = !!entry?.isIntersecting;
     if (isVisible && hasNextPage !== false) {
       fetchNextPage();
@@ -262,7 +262,7 @@ export function useConversationMyInvitableUsersList(enabled: boolean, conversati
     },
   );
 
-  const ref = UseIntersectionObserverCallback<HTMLDivElement>(([entry]) => {
+  const ref = useIntersectionObserver<HTMLDivElement>(([entry]) => {
     const isVisible = !!entry?.isIntersecting;
     if (isVisible && hasNextPage !== false) {
       fetchNextPage();

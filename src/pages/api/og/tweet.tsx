@@ -2,7 +2,8 @@
 import type { NextRequest } from "next/server";
 import { ImageResponse } from "@vercel/og";
 import { absUrl } from "src/utils/url";
-import { kysely } from "src/server/db/kysely";
+//import { kysely } from "src/server/db/kysely";
+import { dbfetch } from "src/server/db";
 import { numberFromHashid } from "src/utils/hashids";
 import { format } from "date-fns";
 
@@ -57,18 +58,20 @@ export default async function handler(req: NextRequest) {
     if (!tweetId) {
       return new Response(`bad tweetId`, { status: 500 });
     }
-
-    const tweet = await kysely.connection().execute((db) => {
-      return db.selectFrom("Tweet").where("Tweet.id", "=", tweetId).selectAll().executeTakeFirst();
-    });
+    const db = dbfetch();
+    const tweet = await db.selectFrom("Tweet").where("Tweet.id", "=", tweetId).selectAll().executeTakeFirst();
+    //const tweet = await kysely.connection().execute((db) => {
+    //  return db.selectFrom("Tweet").where("Tweet.id", "=", tweetId).selectAll().executeTakeFirst();
+    //});
 
     if (!tweet) {
       return new Response(`no tweet`, { status: 500 });
     }
 
-    const author = await kysely.connection().execute((db) => {
-      return db.selectFrom("User").where("User.id", "=", tweet.authorId).selectAll().executeTakeFirst();
-    });
+    const author = await db.selectFrom("User").where("User.id", "=", tweet.authorId).selectAll().executeTakeFirst();
+    //const author = await kysely.connection().execute((db) => {
+    //  return db.selectFrom("User").where("User.id", "=", tweet.authorId).selectAll().executeTakeFirst();
+    //});
     if (!author) {
       return new Response(`no author`, { status: 500 });
     }
@@ -170,7 +173,8 @@ export default async function handler(req: NextRequest) {
         ],
       },
     );
-  } catch {
+  } catch (error) {
+    console.log(error);
     return new Response(`Failed to generate the image`, { status: 500 });
   }
 }
