@@ -39,3 +39,5 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+pscale_dump_musker_main_20240402_132008/
